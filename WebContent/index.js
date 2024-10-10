@@ -1,7 +1,4 @@
-/**
- * Handles data returned by API, read jsonObject, and populate data into HTML elements
- * @param resultData jsonObject
- */
+// handles movie list table
 function handleMovieListResult(resultData) {
     console.log("handleMovieListResult: populating movie list table from resultData");
 
@@ -15,7 +12,7 @@ function handleMovieListResult(resultData) {
         rowHTML += "<tr>";
         rowHTML +=
             "<th>" +
-            '<a href="movie-list.html?id=>' + resultData[i]['movie_id'] + '">'
+            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
             + resultData[i]["movie_title"] +
             "</a>" +
             "</th>";
@@ -30,10 +27,7 @@ function handleMovieListResult(resultData) {
     }
 }
 
-/**
- * Runs after .js is loaded.
- * Makes HTTP GET request, registers on success callback function handleMovieListResult
- */
+// makes HTTP GET request; upon success, uses callback function handleMovieListResult()
 jQuery.ajax({
     dataType: "json", // set return data type
     method: "GET", // set request method
