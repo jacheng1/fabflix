@@ -59,7 +59,7 @@ public class MovieListServlet extends HttpServlet {
 
             ResultSet rs = statement.executeQuery(query); // execute query
 
-            JsonArray jsonArray = new JsonArray();
+            JsonArray jsonArray = new JsonArray(); // construct new JsonArray object
 
             // iterate through each row of rs
             while (rs.next()) {
@@ -83,7 +83,6 @@ public class MovieListServlet extends HttpServlet {
 
                 jsonArray.add(jsonObject); // add created jsonObject to jsonArray
             }
-
             rs.close(); // close rs
             statement.close(); // close declared statement
 
