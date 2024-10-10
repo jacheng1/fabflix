@@ -19,7 +19,12 @@ function handleMovieListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_genre"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_star"] + "</th>";
+        rowHTML +=
+            "<th>" +
+            '<a href="single-star.html?id=' + resultData[i]['movie_id'] + '">'
+            + resultData[i]["movie_star"] +
+            "</a>" +
+            "</th>";
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 

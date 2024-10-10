@@ -30,6 +30,7 @@ function handleSingleMovieResult(resultData) {
 
     let movieInfoElement = jQuery("#movie_info"); // find empty h3 body movie_info by id, populate it
 
+    // append HTML to movieInfoElement
     movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
         "<p>Release Year: " + resultData[0]["movie_year"] + "</p>" +
         "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
@@ -40,10 +41,10 @@ function handleSingleMovieResult(resultData) {
 
 let movieId = getParameterByName("id");
 
-// makes HTTP GET request; upon success, uses callback function singleMovieResult()
+// makes HTTP GET request; upon success, uses callback function handleSingleMovieResult()
 jQuery.ajax({
-    dataType: "json", // set return data type
-    method: "GET", // set request method
+    dataType: "json", // set return data type to JSON
+    method: "GET", // set request method to GET
     url: "api/single-movie?id=" + movieId, // set request URL as mapped by SingleMovieServlet
     success: (resultData) => handleSingleMovieResult(resultData) // set callback function to handle returned data from SingleMovieServlet
 });
