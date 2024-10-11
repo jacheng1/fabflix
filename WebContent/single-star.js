@@ -34,7 +34,7 @@ function handleSingleStarResult(resultData) {
 
     // append HTML to starInfoElement
     starInfoElement.append("<p>Star Name: " + resultData[0]["star_name"] + "</p>" +
-        "<p>Date Of Birth: " + resultData[0]["star_birthYear"] + "</p>");
+        "<p>Year of Birth: " + (resultData[0]["star_birthYear"] === null ? "N/A" : resultData[0]["star_birthYear"]) + "</p>");
 
     console.log("handleSingleStarResult: populating movie table from resultData");
 

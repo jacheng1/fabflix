@@ -47,7 +47,8 @@ public class SingleMovieServlet extends HttpServlet{
             // define SQL query
             String query = "SELECT m.id, m.title, m.year, m.director, r.rating, " +
                     "GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', ') AS genres, " +
-                    "GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', ') AS stars " +
+                    "GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', ') AS stars, " +
+                    "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids " +
                     "FROM moviedb.movies m " +
                     "JOIN moviedb.ratings r ON m.id = r.movieId " +
                     "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
@@ -74,6 +75,7 @@ public class SingleMovieServlet extends HttpServlet{
                 String movie_genre = rs.getString("genres");
                 String movie_star = rs.getString("stars");
                 String movie_rating = rs.getString("rating");
+                String star_ids = rs.getString("star_ids");
 
                 // create new JsonObject based on data retrieved from rs
                 JsonObject jsonObject = new JsonObject();
@@ -84,6 +86,7 @@ public class SingleMovieServlet extends HttpServlet{
                 jsonObject.addProperty("movie_genre", movie_genre);
                 jsonObject.addProperty("movie_star", movie_star);
                 jsonObject.addProperty("movie_rating", movie_rating);
+                jsonObject.addProperty("star_ids", star_ids);
 
                 jsonArray.add(jsonObject); // add created jsonObject to jsonArray
             }

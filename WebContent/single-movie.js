@@ -30,12 +30,25 @@ function handleSingleMovieResult(resultData) {
 
     let movieInfoElement = jQuery("#movie_info"); // find empty h3 body movie_info by id, populate it
 
+    let starNames = resultData[0]["movie_star"].split(", ");
+    let starIds = resultData[0]["star_ids"].split(", ");
+
+    let starsHTML = "";
+
+    for (let i = 0; i < starNames.length; i++) {
+        starsHTML += '<a href="single-star.html?id=' + starIds[i] + '">' + starNames[i] + '</a>';
+
+        if (i < starNames.length - 1) {
+            starsHTML += ", ";
+        }
+    }
+
     // append HTML to movieInfoElement
     movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
         "<p>Release Year: " + resultData[0]["movie_year"] + "</p>" +
         "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
         "<p>Genre(s): " + resultData[0]["movie_genre"] + "</p>" +
-        "<p>Star(s): " + resultData[0]["movie_star"] + "</p>" +
+        "<p>Star(s): " + starsHTML + "</p>" +
         "<p>Rating: " + resultData[0]["movie_rating"] + "</p>");
 }
 
