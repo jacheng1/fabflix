@@ -11,10 +11,59 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <title>Single Movie</title>
+    <style>
+        body {
+            background-color: #0d1116;
+        }
+
+        .custom-navbar {
+            background-color: #0f1a26;
+            color: white;
+        }
+
+        .custom-navbar .navbar-brand {
+            color: white;
+        }
+
+        .custom-navbar .top-20-button {
+            color: #667183;
+            background-color: #0f1a26;
+            font-weight: bold;
+            border: none;
+        }
+
+        .custom-navbar .top-20-button:hover {
+            color: white;
+            background-color: #1b2a39;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        h3 {
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Single Movie Page</h1>
+<nav class="navbar navbar-expand-lg fixed-top custom-navbar">
+    <div>
+        <a class="navbar-brand" href="#">Fabflix</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button type="button" class="btn btn-primary top-20-button" onclick="window.location.href='http://localhost:8080/cs122b_project1_war/'">
+                    Top 20 Movies
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<h1 class="mt-5 text-center">Single Movie Page</h1>
 
 <h3 id="movie_info"></h3>
 

@@ -19,7 +19,17 @@ function handleMovieListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_genre"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_star"] + "</th>";
+        rowHTML += "<th>";
+        let starNames = resultData[i]["movie_star"].split(", ");
+        let starIds = resultData[i]["star_ids"].split(", ");
+        for (let j = 0; j < starNames.length; j++) {
+            rowHTML += '<a href="single-star.html?id=' + starIds[j] + '">' + starNames[j] + '</a>';
+
+            if (j < starNames.length - 1) {
+                rowHTML += ", ";
+            }
+        }
+        rowHTML += "</th>";
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 
