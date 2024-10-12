@@ -55,8 +55,7 @@ public class MovieListServlet extends HttpServlet {
                     "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
                     "LEFT JOIN moviedb.stars s ON sm.starId = s.id " +
                     "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
-                    "ORDER BY r.rating DESC " +
-                    "LIMIT 20;";
+                    "ORDER BY r.rating DESC;";
 
             ResultSet rs = statement.executeQuery(query); // execute query
 
