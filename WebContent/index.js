@@ -5,7 +5,7 @@ function handleMovieListResult(resultData) {
     let movieListTableBodyElement = jQuery("#movie_table_body"); // find empty table body by id "movie_table_body"
 
     // iterate through resultData
-    for (let i = 0; i < resultData.length; i++) {
+    for (let i = 0; i < Math.min(20, resultData.length); i++) {
         // concatenate HTML tags with resultData JSON object
         let rowHTML = "";
 
