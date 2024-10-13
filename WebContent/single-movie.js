@@ -1,3 +1,5 @@
+// derived from Project 1 API example: https://github.com/UCI-Chenli-teaching/cs122b-project1-api-example/blob/main/WebContent/single-star.js
+
 /**
  * Retrieve parameter from obtained request URL, matched by parameter name
  * @param target

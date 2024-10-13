@@ -1,3 +1,5 @@
+// derived from Project 1 API example: https://github.com/UCI-Chenli-teaching/cs122b-project1-api-example/blob/main/WebContent/index.js
+
 // handles movie list table
 function handleMovieListResult(resultData) {
     console.log("handleMovieListResult: populating movie list table from resultData");
