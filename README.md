@@ -14,7 +14,7 @@
 ### Member Contributions
 
 ● Jacky: repository setup, Movie List Page, Single Movie Page, Single Star Page\
-● Kristin: AWS instance setup, web application deployment on AWS instance, Single Star Page, video demonstration
+● Kristen: AWS instance setup, web application deployment on AWS instance, Single Star Page, video demonstration
 
 
 
