@@ -36,6 +36,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -90,5 +91,6 @@ public class LoginServlet extends HttpServlet {
         }
 
         response.getWriter().write(responseJsonObject.toString());
+        System.out.println("Response sent to client: " + responseJsonObject.toString());
     }
 }
