@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>Fabflix</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      height: 100vh;
+      background-color: #0d1116;
+    }
+
+    .custom-navbar {
+      background-color: #0f1a26;
+      color: white;
+    }
+
+    .custom-navbar .navbar-brand {
+      color: white;
+      margin-left: 70px;
+    }
+
+    .custom-navbar .home-button,
+    .custom-navbar .top-20-button,
+    .custom-navbar .result-button,
+    .custom-navbar .checkout-button {
+      color: #667183;
+      background-color: #0f1a26;
+      font-weight: bold;
+      border: none;
+      margin-right: 10px;
+    }
+
+    .custom-navbar .home-button:hover,
+    .custom-navbar .top-20-button:hover,
+    .custom-navbar .result-button:hover,
+    .custom-navbar .checkout-button:hover {
+      color: white;
+      background-color: #1b2a39;
+    }
+
+    input.form-control {
+      border-color: #424955 !important;
+      background-color: #0d1116 !important;
+      margin-right: 15px;
+      width: auto;
+    }
+
+    .title-input {
+      margin-left: 310px;
+    }
+
+    .custom-navbar .search-button {
+      border: none !important;
+      color: white;
+      background-color: #785ef5 !important;
+    }
+
+    .custom-navbar .search-button:hover {
+      color: white !important;
+      background-color: #907EEC !important;
+    }
+
+    h2 {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    p {
+      color: #667183;
+      text-align: center;
+    }
+
+    .browse-container {
+      display: block;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 1750px;
+      height: 100%;
+      max-height: 700px;
+      padding: 60px;
+      margin: auto;
+      background-color: #181b20;
+    }
+
+    .genre-column {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top custom-navbar">
+  <div>
+    <a class="navbar-brand" href="#">Fabflix</a>
+  </div>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary home-button"
+                onclick="
+                  var basePath = window.location.origin;
+
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/main.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/main.html';
+                  }
+        ">
+          Home
+        </button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary top-20-button"
+                onclick="
+                  var basePath = window.location.origin;
+
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/index.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/index.html';
+                  }
+        ">
+          Top 20 Movies
+        </button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary result-button"
+                onclick="
+                  var basePath = window.location.origin;
+
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/result.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/result.html';
+                  }
+        ">
+          Result
+        </button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary checkout-button"
+                onclick="
+                  var basePath = window.location.origin;
+
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/checkout.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/checkout.html';
+                  }
+        ">
+          Checkout
+        </button>
+      </li>
+      <li class="nav-item title-input">
+        <input class="form-control" id="title" name="title" type="text" placeholder="Title">
+      </li>
+      <li class="nav-item">
+        <input class="form-control" id="year" name="year" type="text" placeholder="Year">
+      </li>
+      <li class="nav-item">
+        <input class="form-control" id="Director" name="director" type="text" placeholder="Director">
+      </li>
+      <li class="nav-item">
+        <input class="form-control" id="star" name="star" type="text" placeholder="Star">
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary search-button"
+                onclick="
+                  var basePath = window.location.origin;
+
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/result.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/result.html';
+                  }
+        ">
+          Search
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="browse-container">
+  <h2>Browse by Movie Genre</h2>
+  <div class="row">
+    <div class="genre-column col-md-3">
+      <p>Action</p>
+      <p>Biography</p>
+      <p>Drama</p>
+      <p>Horror</p>
+      <p>Reality-TV</p>
+      <p>Thriller</p>
+    </div>
+    <div class="genre-column col-md-3">
+      <p>Adult</p>
+      <p>Comedy</p>
+      <p>Family</p>
+      <p>Music</p>
+      <p>Romance</p>
+      <p>War</p>
+    </div>
+    <div class="genre-column col-md-3">
+      <p>Adventure</p>
+      <p>Crime</p>
+      <p>Fantasy</p>
+      <p>Musical</p>
+      <p>Sci-Fi</p>
+      <p>Western</p>
+    </div>
+    <div class="genre-column">
+      <p>Animation</p>
+      <p>Documentary</p>
+      <p>History</p>
+      <p>Mystery</p>
+      <p>Sport</p>
+    </div>
+  </div>
+
+  <h2>Browse by Movie Title</h2>
+  <div class="title-row">
+    <p>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+  </div>
+  <div class="title-row">
+    <p>0 1 2 3 4 5 6 7 8 9 *</p>
+  </div>
+</div>
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Load main.js file -->
+<script src="main.js"></script>
+
+</body>
+</html>
