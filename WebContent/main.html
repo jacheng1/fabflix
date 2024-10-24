@@ -96,6 +96,15 @@
     .genre-column {
       margin-bottom: 20px;
     }
+
+    .title-row a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .title-row a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -129,20 +138,6 @@
                     window.location.href = basePath + '/cs122b_project1_war/index.html';
                   } else {
                     window.location.href = basePath + '/cs122b-project1/index.html';
-                  }
-        ">
-          Top 20 Movies
-        </button>
-      </li>
-      <li class="nav-item">
-        <button type="button" class="btn btn-primary result-button"
-                onclick="
-                  var basePath = window.location.origin;
-
-                  if (basePath.includes('localhost')) {
-                    window.location.href = basePath + '/cs122b_project1_war/result.html';
-                  } else {
-                    window.location.href = basePath + '/cs122b-project1/result.html';
                   }
         ">
           Result
@@ -230,10 +225,10 @@
 
   <h2>Browse by Movie Title</h2>
   <div class="title-row">
-    <p>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+    <p id="alpha-links"></p>
   </div>
   <div class="title-row">
-    <p>0 1 2 3 4 5 6 7 8 9 *</p>
+    <p id="numeric-links"></p>
   </div>
 </div>
 

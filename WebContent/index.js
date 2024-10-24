@@ -1,13 +1,37 @@
 // derived from Project 1 API example: https://github.com/UCI-Chenli-teaching/cs122b-project1-api-example/blob/main/WebContent/index.js
 
+/**
+ * Retrieve parameter from obtained request URL, matched by parameter name
+ * @param target
+ * @returns {string|null}
+ */
+function getParameterByName(target) {
+    let url = window.location.href; // retrieve request URL
+
+    target = target.replace(/[\[\]]/g, "\\$&"); // encode target parameter name to URL encoding
+
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"), results = regex.exec(url); // use regular expression to find matched parameter value
+
+    if (!results) {
+        return null;
+    }
+
+    if (!results[2]) {
+        return '';
+    }
+
+    return decodeURIComponent(results[2].replace(/\+/g, " ")); // return decoded parameter value
+}
+
 // handles movie list table
 function handleMovieListResult(resultData) {
     console.log("handleMovieListResult: populating movie list table from resultData");
 
     let movieListTableBodyElement = jQuery("#movie_table_body"); // find empty table body by id "movie_table_body"
+    movieListTableBodyElement.empty(); // clear any existing content in case of refresh
 
     // iterate through resultData
-    for (let i = 0; i < Math.min(20, resultData.length); i++) {
+    for (let i = 0; i < resultData.length; i++) {
         // concatenate HTML tags with resultData JSON object
         let rowHTML = "";
 
@@ -49,10 +73,18 @@ function handleMovieListResult(resultData) {
     }
 }
 
+let prefix = getParameterByName("prefix") || "";
+
+let ajaxURL = "api/movielist";
+if (prefix) {
+    ajaxURL += "?prefix=" + encodeURIComponent(prefix);
+}
+console.log("Making Ajax request to: ", ajaxURL);
+
 // makes HTTP GET request; upon success, uses callback function handleMovieListResult()
 jQuery.ajax({
     dataType: "json", // set return data type
     method: "GET", // set request method
-    url: "api/movielist", // set request URL as mapped by MovieListServlet
+    url: ajaxURL, // set request URL as mapped by MovieListServlet
     success: (resultData) => handleMovieListResult(resultData) // set callback function to handle returned data from MovieListServlet
 });

@@ -14,8 +14,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 // declare WebServlet named MovieListServlet, map to URL "/api/movielist"
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
@@ -39,29 +39,58 @@ public class MovieListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json"); // set type to "application/json" - server returns JSON object
 
+        String prefix = request.getParameter("prefix"); // retrieve parameter prefix from URL request
+        if (prefix == null || prefix.isEmpty()) {
+            prefix = "";
+        }
+        request.getServletContext().log("Retrieving parameter prefix: " + prefix);
+
         PrintWriter out = response.getWriter(); // output stream to STDOUT
 
         // try connection from dataSource, catch potential error(s), & close connection after usage
         try (Connection conn = dataSource.getConnection()) {
-            Statement statement = conn.createStatement(); // declare statement
+            String query; // define SQL query
 
-            // define SQL query
-            String query = "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
-                    "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
-                    "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', '), ', ', 3) AS stars, " +
-                    "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids, " +
-                    "GROUP_CONCAT(DISTINCT g.id ORDER BY g.name ASC SEPARATOR ', ') AS genre_ids " +
-                    "FROM moviedb.movies m " +
-                    "JOIN moviedb.ratings r ON m.id = r.movieId " +
-                    "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
-                    "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
-                    "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
-                    "LEFT JOIN moviedb.stars s ON sm.starId = s.id " +
-                    "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
-                    "ORDER BY r.rating DESC " +
-                    "LIMIT 20;";
+            if (prefix.equals("*")) {
+                // set query for movies starting with non-alphanumeric characters
+                query = "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', '), ', ', 3) AS stars, " +
+                        "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids, " +
+                        "GROUP_CONCAT(DISTINCT g.id ORDER BY g.name ASC SEPARATOR ', ') AS genre_ids " +
+                        "FROM moviedb.movies m " +
+                        "JOIN moviedb.ratings r ON m.id = r.movieId " +
+                        "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
+                        "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
+                        "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
+                        "LEFT JOIN moviedb.stars s ON sm.starId = s.id " +
+                        "WHERE m.title REGEXP '^[^a-zA-Z0-9]' " +
+                        "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
+                        "ORDER BY r.rating DESC;";
+            } else {
+                // set query for movies starting with alphanumeric characters
+                query = "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', '), ', ', 3) AS stars, " +
+                        "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids, " +
+                        "GROUP_CONCAT(DISTINCT g.id ORDER BY g.name ASC SEPARATOR ', ') AS genre_ids " +
+                        "FROM moviedb.movies m " +
+                        "JOIN moviedb.ratings r ON m.id = r.movieId " +
+                        "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
+                        "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
+                        "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
+                        "LEFT JOIN moviedb.stars s ON sm.starId = s.id " +
+                        "WHERE m.title LIKE ? COLLATE utf8mb4_general_ci " +
+                        "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
+                        "ORDER BY r.rating DESC;";
+            }
 
-            ResultSet rs = statement.executeQuery(query); // execute query
+            PreparedStatement statement = conn.prepareStatement(query);
+            if (!prefix.equals("*")) {
+                statement.setString(1, prefix + "%");
+            }
+
+            ResultSet rs = statement.executeQuery(); // execute query
 
             JsonArray jsonArray = new JsonArray(); // construct new JsonArray object
 
