@@ -20,7 +20,17 @@ function handleMovieListResult(resultData) {
             "</th>";
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_genre"] + "</th>";
+        rowHTML += "<th>";
+        let genreNames = resultData[i]["movie_genre"].split(", ");
+        let genreIds = resultData[i]["genre_ids"].split(", ");
+        for (let j = 0; j < genreNames.length; j++) {
+            rowHTML += '<a href="index.html?id=' + genreIds[j] + '">' + genreNames[j] + '</a>';
+
+            if (j < genreNames.length - 1) {
+                rowHTML += ", ";
+            }
+        }
+        rowHTML += "</th>";
         rowHTML += "<th>";
         let starNames = resultData[i]["movie_star"].split(", ");
         let starIds = resultData[i]["star_ids"].split(", ");
