@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 // declare WebServlet named MovieListServlet, map to URL "/api/movielist"
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
@@ -39,11 +41,20 @@ public class MovieListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json"); // set type to "application/json" - server returns JSON object
 
-        String prefix = request.getParameter("prefix"); // retrieve parameter prefix from URL request
+        // get parameter(s) for alphanumeric browse
+        String prefix = request.getParameter("prefix");
         if (prefix == null || prefix.isEmpty()) {
             prefix = "";
         }
-        String genre = request.getParameter("genre"); // retrieve parameter genre from URL request
+
+        // get parameter(s) for genre browse
+        String genre = request.getParameter("genre");
+
+        // get parameter(s) for search
+        String title = request.getParameter("title");
+        String year = request.getParameter("year");
+        String director = request.getParameter("director");
+        String starName = request.getParameter("star");
 
         PrintWriter out = response.getWriter(); // output stream to STDOUT
 
@@ -106,17 +117,69 @@ public class MovieListServlet extends HttpServlet {
                         "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
                         "LEFT JOIN moviedb.stars s ON sm.starId = s.id ";
 
+                List<String> conditions = new ArrayList<>();
+                List<String> params = new ArrayList<>();
+
                 if (genre != null && !genre.isEmpty()) {
                     query += "WHERE g.id = ? ";
-                }
 
-                query += "GROUP BY m.id, m.title, m.year, m.director, r.rating ";
-                query += "ORDER BY r.rating DESC;";
+                    query += "GROUP BY m.id, m.title, m.year, m.director, r.rating ";
+                    query += "ORDER BY r.rating DESC;";
+                }
+                else if ((title != null && !title.isEmpty()) || (year != null && !year.isEmpty()) || (director != null && !director.isEmpty()) || (starName != null && !starName.isEmpty())) {
+                    StringBuilder queryBuilder = new StringBuilder(
+                            "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
+                                    "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
+                                    "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', '), ', ', 3) AS stars, " +
+                                    "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids, " +
+                                    "GROUP_CONCAT(DISTINCT g.id ORDER BY g.name ASC SEPARATOR ', ') AS genre_ids " +
+                                    "FROM moviedb.movies m " +
+                                    "JOIN moviedb.ratings r ON m.id = r.movieId " +
+                                    "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
+                                    "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
+                                    "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
+                                    "LEFT JOIN moviedb.stars s ON sm.starId = s.id "
+                    );
+
+                    // check each filter and add the relevant condition and parameter
+                    if (title != null && !title.isEmpty()) {
+                        conditions.add("m.title LIKE ?");
+                        params.add("%" + title + "%");
+                    }
+                    if (year != null && !year.isEmpty()) {
+                        conditions.add("m.year = ?");
+                        params.add(year);
+                    }
+                    if (director != null && !director.isEmpty()) {
+                        conditions.add("m.director LIKE ?");
+                        params.add("%" + director + "%");
+                    }
+                    if (starName != null && !starName.isEmpty()) {
+                        conditions.add("s.name LIKE ?");
+                        params.add("%" + starName + "%");
+                    }
+
+                    if (!conditions.isEmpty()) {
+                        queryBuilder.append(" WHERE ").append(String.join(" AND ", conditions));
+                    }
+
+                    queryBuilder.append(" GROUP BY m.id, m.title, m.year, m.director, r.rating ORDER BY r.rating DESC;");
+                    query = queryBuilder.toString();
+                }
+                else {
+                    query += "GROUP BY m.id, m.title, m.year, m.director, r.rating ";
+                    query += "ORDER BY r.rating DESC;";
+                }
 
                 statement = conn.prepareStatement(query);
 
                 if (genre != null && !genre.isEmpty()) {
                     statement.setString(1, genre);
+                }
+                else if ((title != null && !title.isEmpty()) || (year != null && !year.isEmpty()) || (director != null && !director.isEmpty()) || (starName != null && !starName.isEmpty())) {
+                    for (int i = 0; i < params.size(); i++) {
+                        statement.setString(i + 1, params.get(i));
+                    }
                 }
             }
 

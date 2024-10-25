@@ -76,6 +76,12 @@ function handleMovieListResult(resultData) {
 
 let prefix = getParameterByName("prefix") || "";
 let genreId = getParameterByName("genre") || "";
+let title = getParameterByName("title") || "";
+let year = getParameterByName("year") || "";
+let director = getParameterByName("director") || "";
+let starName = getParameterByName(("star")) || "";
+
+let params = [];
 
 let ajaxURL = "api/movielist";
 if (prefix) {
@@ -83,6 +89,27 @@ if (prefix) {
 }
 else if (genreId) {
     ajaxURL += "?genre=" + encodeURIComponent(genreId);
+}
+else if (title || year || director || starName) {
+    if (title) {
+        params.push("title=" + encodeURIComponent(title));
+    }
+
+    if (year) {
+        params.push("year=" + encodeURIComponent(year));
+    }
+
+    if (director) {
+        params.push("director=" + encodeURIComponent(director));
+    }
+
+    if (starName) {
+        params.push("star=" + encodeURIComponent(starName));
+    }
+
+    if (params.length > 0) {
+        ajaxURL += "?" + params.join("&");
+    }
 }
 console.log("Making Ajax request to: ", ajaxURL);
 
