@@ -43,13 +43,15 @@ public class MovieListServlet extends HttpServlet {
         if (prefix == null || prefix.isEmpty()) {
             prefix = "";
         }
-        request.getServletContext().log("Retrieving parameter prefix: " + prefix);
+        String genre = request.getParameter("genre"); // retrieve parameter genre from URL request
 
         PrintWriter out = response.getWriter(); // output stream to STDOUT
 
         // try connection from dataSource, catch potential error(s), & close connection after usage
         try (Connection conn = dataSource.getConnection()) {
             String query; // define SQL query
+
+            PreparedStatement statement;
 
             if (prefix.equals("*")) {
                 // set query for movies starting with non-alphanumeric characters
@@ -67,7 +69,10 @@ public class MovieListServlet extends HttpServlet {
                         "WHERE m.title REGEXP '^[^a-zA-Z0-9]' " +
                         "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
                         "ORDER BY r.rating DESC;";
-            } else {
+
+                statement = conn.prepareStatement(query);
+
+            } else if ((prefix.length() == 1 && Character.isLetter(prefix.charAt(0))) || (prefix.length() == 1 && Character.isDigit(prefix.charAt(0)))) {
                 // set query for movies starting with alphanumeric characters
                 query = "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
                         "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
@@ -83,11 +88,36 @@ public class MovieListServlet extends HttpServlet {
                         "WHERE m.title LIKE ? COLLATE utf8mb4_general_ci " +
                         "GROUP BY m.id, m.title, m.year, m.director, r.rating " +
                         "ORDER BY r.rating DESC;";
-            }
 
-            PreparedStatement statement = conn.prepareStatement(query);
-            if (!prefix.equals("*")) {
+                statement = conn.prepareStatement(query);
                 statement.setString(1, prefix + "%");
+
+            } else {
+                // set query for movies according to genre
+                query = "SELECT m.id AS movie_id, m.title, m.year, m.director, r.rating, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', '), ', ', 3) AS genres, " +
+                        "SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', '), ', ', 3) AS stars, " +
+                        "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids, " +
+                        "GROUP_CONCAT(DISTINCT g.id ORDER BY g.name ASC SEPARATOR ', ') AS genre_ids " +
+                        "FROM moviedb.movies m " +
+                        "JOIN moviedb.ratings r ON m.id = r.movieId " +
+                        "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
+                        "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
+                        "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
+                        "LEFT JOIN moviedb.stars s ON sm.starId = s.id ";
+
+                if (genre != null && !genre.isEmpty()) {
+                    query += "WHERE g.id = ? ";
+                }
+
+                query += "GROUP BY m.id, m.title, m.year, m.director, r.rating ";
+                query += "ORDER BY r.rating DESC;";
+
+                statement = conn.prepareStatement(query);
+
+                if (genre != null && !genre.isEmpty()) {
+                    statement.setString(1, genre);
+                }
             }
 
             ResultSet rs = statement.executeQuery(); // execute query

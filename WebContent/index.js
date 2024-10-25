@@ -26,6 +26,7 @@ function getParameterByName(target) {
 // handles movie list table
 function handleMovieListResult(resultData) {
     console.log("handleMovieListResult: populating movie list table from resultData");
+    console.log("resultData: ", resultData);
 
     let movieListTableBodyElement = jQuery("#movie_table_body"); // find empty table body by id "movie_table_body"
     movieListTableBodyElement.empty(); // clear any existing content in case of refresh
@@ -48,7 +49,7 @@ function handleMovieListResult(resultData) {
         let genreNames = resultData[i]["movie_genre"].split(", ");
         let genreIds = resultData[i]["genre_ids"].split(", ");
         for (let j = 0; j < genreNames.length; j++) {
-            rowHTML += '<a href="index.html?id=' + genreIds[j] + '">' + genreNames[j] + '</a>';
+            rowHTML += '<a href="index.html?genre=' + genreIds[j] + '">' + genreNames[j] + '</a>';
 
             if (j < genreNames.length - 1) {
                 rowHTML += ", ";
@@ -74,10 +75,14 @@ function handleMovieListResult(resultData) {
 }
 
 let prefix = getParameterByName("prefix") || "";
+let genreId = getParameterByName("genre") || "";
 
 let ajaxURL = "api/movielist";
 if (prefix) {
     ajaxURL += "?prefix=" + encodeURIComponent(prefix);
+}
+else if (genreId) {
+    ajaxURL += "?genre=" + encodeURIComponent(genreId);
 }
 console.log("Making Ajax request to: ", ajaxURL);
 

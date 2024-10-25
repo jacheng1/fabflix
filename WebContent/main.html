@@ -93,8 +93,14 @@
       background-color: #181b20;
     }
 
-    .genre-column {
-      margin-bottom: 20px;
+    .custom-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .custom-link:hover {
+      color: inherit;
+      text-decoration: underline;
     }
 
     .title-row a {
@@ -190,37 +196,7 @@
 <div class="browse-container">
   <h2>Browse by Movie Genre</h2>
   <div class="row">
-    <div class="genre-column col-md-3">
-      <p>Action</p>
-      <p>Biography</p>
-      <p>Drama</p>
-      <p>Horror</p>
-      <p>Reality-TV</p>
-      <p>Thriller</p>
-    </div>
-    <div class="genre-column col-md-3">
-      <p>Adult</p>
-      <p>Comedy</p>
-      <p>Family</p>
-      <p>Music</p>
-      <p>Romance</p>
-      <p>War</p>
-    </div>
-    <div class="genre-column col-md-3">
-      <p>Adventure</p>
-      <p>Crime</p>
-      <p>Fantasy</p>
-      <p>Musical</p>
-      <p>Sci-Fi</p>
-      <p>Western</p>
-    </div>
-    <div class="genre-column">
-      <p>Animation</p>
-      <p>Documentary</p>
-      <p>History</p>
-      <p>Mystery</p>
-      <p>Sport</p>
-    </div>
+    <div class="text-center" id="genre-links"></div>
   </div>
 
   <h2>Browse by Movie Title</h2>
