@@ -29,7 +29,6 @@ function getParameterByName(target) {
  */
 function handleSingleStarResult(resultData) {
     console.log("handleSingleStarResult: populating star info from resultData");
-
     console.log("resultData: ", resultData);
 
     let starInfoElement = jQuery("#star_info"); // find empty h3 body star_info by id, populate it
