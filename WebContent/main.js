@@ -31,20 +31,23 @@ function handleMainResult(resultData) {
 
     let genreInfoElement = jQuery("#genre-links");
 
-    let genreHTML = '<div class="row">';
+    let genreHTML = '<div class="container"><div class="row justify-content-center">';
     for (let i = 0; i < resultData.length; i++) {
         genreHTML += `
             <div class="genre-column col-md-3 text-center">
-                <p>
-                    <a href="index.html?genre=${resultData[i]['genre_ids']}" class="custom-link">
-                        ${resultData[i]["movie_genre"]}
-                    </a>
-                </p>
+        
+                    <p>
+                        <a href="index.html?genre=${resultData[i]['genre_ids']}" class="custom-link">
+                            ${resultData[i]["movie_genre"]}
+                        </a>
+                    </p>
+        
+                
             </div>`;
 
         // check to end the current row and start a new one every 4 columns
         if ((i + 1) % 4 === 0 && i + 1 < resultData.length) {
-            genreHTML += '</div><div class="row">';
+            genreHTML += '</div><div class="row justify-content-center">';
         }
     }
     genreHTML += '</div>';
