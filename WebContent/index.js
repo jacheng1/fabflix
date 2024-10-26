@@ -74,41 +74,73 @@ function handleMovieListResult(resultData) {
     }
 }
 
+// get parameter(s) for alphanumeric browse
 let prefix = getParameterByName("prefix") || "";
+
+// get parameter(s) for genre browse
 let genreId = getParameterByName("genre") || "";
+
+// get parameter(s) for search
 let title = getParameterByName("title") || "";
 let year = getParameterByName("year") || "";
 let director = getParameterByName("director") || "";
-let starName = getParameterByName(("star")) || "";
+let starName = getParameterByName("star") || "";
 
-let params = [];
+// get parameter(s) for sort
+let moviesPerPage = getParameterByName("n") || "";
+let sortBy = getParameterByName("sort") || "";
 
 let ajaxURL = "api/movielist";
 if (prefix) {
+    // create ajax URL for alphanumeric browse
+
     ajaxURL += "?prefix=" + encodeURIComponent(prefix);
 }
 else if (genreId) {
+    // create ajax URL for genre browse
+
     ajaxURL += "?genre=" + encodeURIComponent(genreId);
 }
 else if (title || year || director || starName) {
+    // create ajax URL for search
+
+    let searchParams = [];
+
     if (title) {
-        params.push("title=" + encodeURIComponent(title));
+        searchParams.push("title=" + encodeURIComponent(title));
     }
 
     if (year) {
-        params.push("year=" + encodeURIComponent(year));
+        searchParams.push("year=" + encodeURIComponent(year));
     }
 
     if (director) {
-        params.push("director=" + encodeURIComponent(director));
+        searchParams.push("director=" + encodeURIComponent(director));
     }
 
     if (starName) {
-        params.push("star=" + encodeURIComponent(starName));
+        searchParams.push("star=" + encodeURIComponent(starName));
     }
 
-    if (params.length > 0) {
-        ajaxURL += "?" + params.join("&");
+    if (searchParams.length > 0) {
+        ajaxURL += "?" + searchParams.join("&");
+    }
+}
+else if (moviesPerPage || sortBy) {
+    // create ajax URL for update
+
+    let updateParams = [];
+
+    if (moviesPerPage) {
+        updateParams.push("n=" + encodeURIComponent(moviesPerPage));
+    }
+
+    if (sortBy) {
+        updateParams.push("sort=" + encodeURIComponent(sortBy));
+    }
+
+    if (updateParams.length > 0) {
+        ajaxURL += "?" + updateParams.join("&");
     }
 }
 console.log("Making Ajax request to: ", ajaxURL);

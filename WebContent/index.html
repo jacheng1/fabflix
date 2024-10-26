@@ -54,6 +54,31 @@
             width: auto;
         }
 
+        label {
+            color: #ffffff;
+            margin-right: 10px;
+        }
+
+        select.custom-select {
+            border-color: #424955 !important;
+            color: #424955 !important;
+            background-color: #181b20 !important;
+            margin-right: 15px;
+            width: auto;
+        }
+
+        .update-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+            margin-right: 15px;
+        }
+
+        .update-button:hover {
+            color: white !important;
+            background-color: #907EEC !important;
+        }
+
         .custom-navbar .search-button {
             border: none !important;
             color: white;
@@ -157,7 +182,34 @@
     </div>
 </nav>
 
-<h1 class="mt-5 text-center">Result</h1>
+<div class="d-flex align-items-center justify-content-between">
+    <h1 class="mt-5">Result</h1>
+    <form class="form-inline mt-5" method="get" action="index.html">
+        <div class="form-group mr-2">
+            <label for="n">Movies Per Page:</label>
+            <select class="custom-select mr-sm-2" id="n" name="n">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <div class="form-group mr-2">
+            <label for="sort">Sort By:</label>
+            <select class="custom-select mr-sm-2" id="sort" name="sort">
+                <option value="0">Title ↑, Rating ↓</option>
+                <option value="1">Title ↑, Rating ↑</option>
+                <option value="2">Title ↓, Rating ↓</option>
+                <option value="3">Title ↓, Rating ↑</option>
+                <option value="4">Rating ↓, Title ↑</option>
+                <option value="5">Rating ↓, Title ↓</option>
+                <option value="6">Rating ↑, Title ↑</option>
+                <option value="7">Rating ↑, Title ↓</option>
+            </select>
+        </div>
+        <button class="btn btn-primary update-button" type="submit">Update</button>
+    </form>
+</div>
 
 <table id=movie_table class="table table-striped">
     <thead>
