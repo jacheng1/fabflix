@@ -54,6 +54,31 @@
             width: auto;
         }
 
+        label {
+            color: #ffffff;
+            margin-right: 10px;
+        }
+
+        select.custom-select {
+            border-color: #424955 !important;
+            color: #424955 !important;
+            background-color: #181b20 !important;
+            margin-right: 15px;
+            width: auto;
+        }
+
+        .update-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+            margin-right: 15px;
+        }
+
+        .update-button:hover {
+            color: white !important;
+            background-color: #907EEC !important;
+        }
+
         .custom-navbar .search-button {
             border: none !important;
             color: white;
@@ -61,6 +86,25 @@
         }
 
         .custom-navbar .search-button:hover {
+            color: white !important;
+            background-color: #907EEC !important;
+        }
+
+        .prev-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+            margin-right: 15px;
+        }
+
+        .next-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+        }
+
+        .prev-button:hover,
+        .next-button:hover {
             color: white !important;
             background-color: #907EEC !important;
         }
@@ -157,7 +201,36 @@
     </div>
 </nav>
 
-<h1 class="mt-5 text-center">Result</h1>
+<div class="d-flex align-items-center justify-content-between">
+    <h1 class="mt-5">Result</h1>
+    <form class="form-inline mt-5" method="get" action="index.html">
+        <div class="form-group mr-2">
+            <label for="n">Movies Per Page:</label>
+            <select class="custom-select mr-sm-2" id="n" name="n">
+                <option value="">Select option</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <div class="form-group mr-2">
+            <label for="sort">Sort By:</label>
+            <select class="custom-select mr-sm-2" id="sort" name="sort">
+                <option value="">Select option</option>
+                <option value="0">Title ↑, Rating ↓</option>
+                <option value="1">Title ↑, Rating ↑</option>
+                <option value="2">Title ↓, Rating ↓</option>
+                <option value="3">Title ↓, Rating ↑</option>
+                <option value="4">Rating ↓, Title ↑</option>
+                <option value="5">Rating ↓, Title ↓</option>
+                <option value="6">Rating ↑, Title ↑</option>
+                <option value="7">Rating ↑, Title ↓</option>
+            </select>
+        </div>
+        <button class="btn btn-primary update-button" type="submit">Update</button>
+    </form>
+</div>
 
 <table id=movie_table class="table table-striped">
     <thead>
@@ -172,6 +245,11 @@
     </thead>
     <tbody id=movie_table_body></tbody>
 </table>
+
+<div class="row justify-content-center" id="pagination-controls">
+    <button class="btn btn-primary prev-button" id="prev-button" type="button">← Prev</button>
+    <button class="btn btn-primary next-button" id="next-button" type="button">Next →</button>
+</div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
