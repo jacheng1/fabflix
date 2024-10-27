@@ -24,18 +24,15 @@ function getParameterByName(target) {
 }
 
 function handleMovieListResult(resultData) {
-    let movieListTableBodyElement = jQuery("#movie_table_body"); // find empty table body by id "movie_table_body"
-    movieListTableBodyElement.empty(); // clear any existing content in case of refresh
+    let movieListTableBodyElement = jQuery("#movie_table_body");
+    movieListTableBodyElement.empty();
 
     // iterate through resultData
     for (let i = 0; i < resultData.length; i++) {
-        // concatenate HTML tags with resultData JSON object
-        let rowHTML = "";
+        let rowHTML = "<tr>";
 
-        rowHTML += "<tr>";
-        rowHTML +=
-            "<th>" +
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
+        rowHTML += "<th>" +
+            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" class="movie-link">'
             + resultData[i]["movie_title"] +
             "</a>" +
             "</th>";
@@ -46,30 +43,21 @@ function handleMovieListResult(resultData) {
         let genreIds = resultData[i]["genre_ids"].split(", ");
         for (let j = 0; j < genreNames.length; j++) {
             rowHTML += '<a href="index.html?genre=' + genreIds[j] + '">' + genreNames[j] + '</a>';
-
-            if (j < genreNames.length - 1) {
-                rowHTML += ", ";
-            }
+            if (j < genreNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th>";
-        rowHTML += "<th>";
+        rowHTML += "</th><th>";
         let starNames = resultData[i]["movie_star"].split(", ");
         let starIds = resultData[i]["star_ids"].split(", ");
         for (let j = 0; j < starNames.length; j++) {
-            rowHTML += '<a href="single-star.html?id=' + starIds[j] + '">' + starNames[j] + '</a>';
-
-            if (j < starNames.length - 1) {
-                rowHTML += ", ";
-            }
+            rowHTML += '<a href="single-star.html?id=' + starIds[j] + '" class="star-link">' + starNames[j] + '</a>';
+            if (j < starNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
-        rowHTML += "</tr>";
+        rowHTML += "</th><th>" + resultData[i]["movie_rating"] + "</th></tr>";
 
         movieListTableBodyElement.append(rowHTML);
     }
 
-    jQuery(".movie-link, .star-link").on("click", savePageState); // save page state before navigating away
+    jQuery(document).on("click", ".movie-link, .star-link", savePageState); // bind click event for saving movie list page state after all rows are added
 
     updatePaginationControls(); // update pagination state with each movie list table load
 }
@@ -88,10 +76,23 @@ function updatePaginationControls() {
     if (currentPage > 1) {
         paginationControls.append('<button class="btn btn-primary prev-button" id="prev-button" type="button">← Prev</button>');
     }
+    else {
+        // else, display prev-button as non-clickable
+
+        paginationControls.append('<button class="btn btn-primary prev-button" id="prev-button" type="button" disabled>← Prev</button>');
+    }
+
+    paginationControls.append('<div class="page-number-box" style="display: inline-block; margin: 0 10px; padding: 5px 10px; border-color: #424955 !important; color: #424955 !important; background-color: #181b20 !important;">' +
+        'Page ' + currentPage + ' of ' + totalPages + '</div>'); // append page number box between prev-button and next-button
 
     // if there are leftover page(s), display next-button
     if (currentPage < totalPages) {
         paginationControls.append('<button class="btn btn-primary next-button" id="next-button" type="button">Next →</button>');
+    }
+    else {
+        // else, display next-button as non-clickable
+
+        paginationControls.append('<button class="btn btn-primary next-button" id="next-button" type="button" disabled>Next →</button>');
     }
 
     jQuery("#prev-button").on("click", function() {
@@ -105,8 +106,11 @@ function updatePaginationControls() {
 
 function navigateToPage(newPage) {
     let url = new URL(window.location.href);
-
     url.searchParams.set("page", newPage);
+
+    sessionStorage.setItem("currentPage", newPage);
+    savePageState();
+
     window.location.href = url.toString();
 }
 
@@ -184,9 +188,6 @@ function restorePageState() {
 
         // only restore movies-per-page/sort-by settings and URL if there are no existing parameters
         if (!window.location.search) {
-            jQuery("#n").val(pageState.n);
-            jQuery("#sort").val(pageState.sort);
-
             // set URL parameters without reloading if it's the first load
             let url = new URL(window.location.href);
 
