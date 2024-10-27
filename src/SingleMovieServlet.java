@@ -49,14 +49,19 @@ public class SingleMovieServlet extends HttpServlet{
             // define SQL query
             String query = "SELECT m.id, m.title, m.year, m.director, r.rating, " +
                     "GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC SEPARATOR ', ') AS genres, " +
-                    "GROUP_CONCAT(DISTINCT s.name ORDER BY s.name ASC SEPARATOR ', ') AS stars, " +
-                    "GROUP_CONCAT(DISTINCT s.id ORDER BY s.name ASC SEPARATOR ', ') AS star_ids " +
+                    "GROUP_CONCAT(DISTINCT s.name ORDER BY star_movie_count DESC, s.name ASC SEPARATOR ', ') AS stars, " +
+                    "GROUP_CONCAT(DISTINCT s.id ORDER BY star_movie_count DESC, s.name ASC SEPARATOR ', ') AS star_ids " +
                     "FROM moviedb.movies m " +
                     "JOIN moviedb.ratings r ON m.id = r.movieId " +
                     "LEFT JOIN moviedb.genres_in_movies gm ON m.id = gm.movieId " +
                     "LEFT JOIN moviedb.genres g ON gm.genreId = g.id " +
                     "LEFT JOIN moviedb.stars_in_movies sm ON m.id = sm.movieId " +
                     "LEFT JOIN moviedb.stars s ON sm.starId = s.id " +
+                    "LEFT JOIN ( " +
+                    "   SELECT starId, COUNT(*) AS star_movie_count " +
+                    "   FROM moviedb.stars_in_movies " +
+                    "   GROUP BY starId " +
+                    ") AS star_counts ON s.id = star_counts.starId " +
                     "WHERE m.id = ? " +
                     "GROUP BY m.id, m.title, m.year, m.director, r.rating";
 

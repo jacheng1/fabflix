@@ -47,8 +47,11 @@ public class SingleStarServlet extends HttpServlet {
         // try connection from dataSource, catch potential error(s), & close connection after usage
         try (Connection conn = dataSource.getConnection()) {
             // define SQL query
-            String query = "SELECT * FROM stars AS s, stars_in_movies AS sim, movies AS m " +
-                    "WHERE m.id = sim.movieId AND sim.starId = s.id AND s.id = ?";
+            String query = "SELECT * FROM stars AS s " +
+                    "JOIN stars_in_movies AS sim ON s.id = sim.starId " +
+                    "JOIN movies AS m ON sim.movieId = m.id " +
+                    "WHERE s.id = ? " +
+                    "ORDER BY m.year DESC, m.title ASC";
 
             PreparedStatement statement = conn.prepareStatement(query); // declare statement
 
