@@ -70,8 +70,44 @@ function handleMovieListResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 
-        movieListTableBodyElement.append(rowHTML); // append row created to table body; refreshes page
+        movieListTableBodyElement.append(rowHTML);
     }
+
+    updatePaginationControls();
+}
+
+function updatePaginationControls() {
+    let currentPage = parseInt(getParameterByName("page")) || 1;
+    let moviesPerPage = getParameterByName("n") || "10";
+    let totalResults = 100;
+
+    let totalPages = Math.ceil(totalResults / moviesPerPage);
+
+    let paginationControls = jQuery("#pagination-controls");
+    paginationControls.empty();
+
+    if (currentPage > 1) {
+        paginationControls.append('<button class="btn btn-primary prev-button" id="prev-button" type="button">← Prev</button>');
+    }
+
+    if (currentPage < totalPages) {
+        paginationControls.append('<button class="btn btn-primary next-button" id="next-button" type="button">Next →</button>');
+    }
+
+    jQuery("#prev-button").on("click", function() {
+        navigateToPage(currentPage - 1);
+    });
+
+    jQuery("#next-button").on("click", function() {
+        navigateToPage(currentPage + 1);
+    });
+}
+
+function navigateToPage(newPage) {
+    let url = new URL(window.location.href);
+
+    url.searchParams.set("page", newPage);
+    window.location.href = url.toString();
 }
 
 // get parameter(s) for alphanumeric browse
@@ -89,6 +125,7 @@ let starName = getParameterByName("star") || "";
 // get parameter(s) for sort
 let moviesPerPage = getParameterByName("n") || "";
 let sortBy = getParameterByName("sort") || "";
+let page = getParameterByName("page") || "1"; // Default to page 1
 
 let ajaxURL = "api/movielist";
 if (prefix) {
@@ -143,6 +180,11 @@ else if (moviesPerPage || sortBy) {
         ajaxURL += "?" + updateParams.join("&");
     }
 }
+
+if (page) {
+    ajaxURL += (ajaxURL.includes("?") ? "&" : "?") + "page=" + encodeURIComponent(page);
+}
+
 console.log("Making Ajax request to: ", ajaxURL);
 
 // makes HTTP GET request; upon success, uses callback function handleMovieListResult()

@@ -90,6 +90,25 @@
             background-color: #907EEC !important;
         }
 
+        .prev-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+            margin-right: 15px;
+        }
+
+        .next-button {
+            border: none !important;
+            color: white;
+            background-color: #785ef5 !important;
+        }
+
+        .prev-button:hover,
+        .next-button:hover {
+            color: white !important;
+            background-color: #907EEC !important;
+        }
+
         h1 {
             color: white;
             margin-top: 30px;
@@ -188,6 +207,7 @@
         <div class="form-group mr-2">
             <label for="n">Movies Per Page:</label>
             <select class="custom-select mr-sm-2" id="n" name="n">
+                <option value="">Select option</option>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -197,6 +217,7 @@
         <div class="form-group mr-2">
             <label for="sort">Sort By:</label>
             <select class="custom-select mr-sm-2" id="sort" name="sort">
+                <option value="">Select option</option>
                 <option value="0">Title ↑, Rating ↓</option>
                 <option value="1">Title ↑, Rating ↑</option>
                 <option value="2">Title ↓, Rating ↓</option>
@@ -224,6 +245,11 @@
     </thead>
     <tbody id=movie_table_body></tbody>
 </table>
+
+<div class="row justify-content-center" id="pagination-controls">
+    <button class="btn btn-primary prev-button" id="prev-button" type="button">← Prev</button>
+    <button class="btn btn-primary next-button" id="next-button" type="button">Next →</button>
+</div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
