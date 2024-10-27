@@ -110,87 +110,84 @@ function navigateToPage(newPage) {
     window.location.href = url.toString();
 }
 
-// get parameter(s) for alphanumeric browse
-let prefix = getParameterByName("prefix") || "";
+function buildAjaxURL() {
+    let genreId = getParameterByName("genre") || "";
+    let prefix = getParameterByName("prefix") || "";
+    let title = getParameterByName("title") || "";
+    let year = getParameterByName("year") || "";
+    let director = getParameterByName("director") || "";
+    let starName = getParameterByName("star") || "";
+    let moviesPerPage = getParameterByName("n") || "10"; // default to 10 if not set
+    let sortBy = getParameterByName("sort") || "";
+    let page = getParameterByName("page") || "1"; // default to 1 if not set
 
-// get parameter(s) for genre browse
-let genreId = getParameterByName("genre") || "";
+    let ajaxURL = "api/movielist?";
 
-// get parameter(s) for search
-let title = getParameterByName("title") || "";
-let year = getParameterByName("year") || "";
-let director = getParameterByName("director") || "";
-let starName = getParameterByName("star") || "";
-
-// get parameter(s) for sort
-let moviesPerPage = getParameterByName("n") || "";
-let sortBy = getParameterByName("sort") || "";
-let page = getParameterByName("page") || "1"; // Default to page 1
-
-let ajaxURL = "api/movielist";
-if (prefix) {
-    // create ajax URL for alphanumeric browse
-
-    ajaxURL += "?prefix=" + encodeURIComponent(prefix);
-}
-else if (genreId) {
-    // create ajax URL for genre browse
-
-    ajaxURL += "?genre=" + encodeURIComponent(genreId);
-}
-else if (title || year || director || starName) {
-    // create ajax URL for search
-
-    let searchParams = [];
-
+    // append all non-empty filters to Ajax URL
+    if (genreId) {
+        ajaxURL += `genre=${encodeURIComponent(genreId)}&`;
+    }
+    if (prefix) {
+        ajaxURL += `prefix=${encodeURIComponent(prefix)}&`;
+    }
     if (title) {
-        searchParams.push("title=" + encodeURIComponent(title));
+        ajaxURL += `title=${encodeURIComponent(title)}&`;
     }
-
     if (year) {
-        searchParams.push("year=" + encodeURIComponent(year));
+        ajaxURL += `year=${encodeURIComponent(year)}&`;
     }
-
     if (director) {
-        searchParams.push("director=" + encodeURIComponent(director));
+        ajaxURL += `director=${encodeURIComponent(director)}&`;
     }
-
     if (starName) {
-        searchParams.push("star=" + encodeURIComponent(starName));
+        ajaxURL += `star=${encodeURIComponent(starName)}&`;
     }
+    ajaxURL += `n=${encodeURIComponent(moviesPerPage)}&sort=${encodeURIComponent(sortBy)}&page=${encodeURIComponent(page)}`;
 
-    if (searchParams.length > 0) {
-        ajaxURL += "?" + searchParams.join("&");
-    }
-}
-else if (moviesPerPage || sortBy) {
-    // create ajax URL for update
-
-    let updateParams = [];
-
-    if (moviesPerPage) {
-        updateParams.push("n=" + encodeURIComponent(moviesPerPage));
-    }
-
-    if (sortBy) {
-        updateParams.push("sort=" + encodeURIComponent(sortBy));
-    }
-
-    if (updateParams.length > 0) {
-        ajaxURL += "?" + updateParams.join("&");
-    }
+    return ajaxURL;
 }
 
-if (page) {
-    ajaxURL += (ajaxURL.includes("?") ? "&" : "?") + "page=" + encodeURIComponent(page);
+// execute the AJAX request with all current filters when the page loads
+function fetchMovies() {
+    let ajaxURL = buildAjaxURL();
+    console.log("Making Ajax request to: ", ajaxURL);
+
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: ajaxURL,
+        success: (resultData) => handleMovieListResult(resultData)
+    });
 }
 
-console.log("Making Ajax request to: ", ajaxURL);
+document.addEventListener("DOMContentLoaded", function () {
+    jQuery(".update-button").on("click", function (event) {
+        event.preventDefault();
 
-// makes HTTP GET request; upon success, uses callback function handleMovieListResult()
-jQuery.ajax({
-    dataType: "json", // set return data type
-    method: "GET", // set request method
-    url: ajaxURL, // set request URL as mapped by MovieListServlet
-    success: (resultData) => handleMovieListResult(resultData) // set callback function to handle returned data from MovieListServlet
+        // retrieve selected values from movies per page and sort by dropdowns
+        let moviesPerPage = jQuery("#n").val();
+        let sortBy = jQuery("#sort").val();
+
+        let url = new URL(window.location.href); // update the URL parameters based on selections
+
+        if (moviesPerPage) {
+            url.searchParams.set("n", moviesPerPage); // set if selected
+        } else {
+            url.searchParams.delete("n"); // remove if not selected
+        }
+
+        if (sortBy) {
+            url.searchParams.set("sort", sortBy); // set if selected
+        } else {
+            url.searchParams.delete("sort"); // remove if not selected
+        }
+
+        url.searchParams.set("page", "1"); // reset to first page
+
+        window.history.replaceState(null, "", url.toString()); // update the browser URL without reloading the page
+
+        fetchMovies();
+    });
 });
+
+fetchMovies();
