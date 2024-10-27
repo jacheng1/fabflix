@@ -1,22 +1,21 @@
-let cart = $("#cart");
+
 
 /**
  * Handle the data returned by IndexServlet
- * @param resultDataString jsonObject, consists of session info
+ * @param resultData jsonObject, consists of session info
  */
-function handleSessionData(resultDataString) {
-    let resultDataJson = JSON.parse(resultDataString);
+
+function handleShoppingCartResult(resultData) {
 
     console.log("handle session response");
-    console.log(resultDataJson);
-    console.log(resultDataJson["sessionID"]);
+    console.log(resultData);
+
 
     // show the session information 
-    $("#sessionID").text("Session ID: " + resultDataJson["sessionID"]);
-    $("#lastAccessTime").text("Last access time: " + resultDataJson["lastAccessTime"]);
 
     // show cart information
-    handleCartArray(resultDataJson["previousItems"]);
+    console.log(resultData["previousItems"]);
+    handleCartArray(resultData);
 }
 
 /**
@@ -24,13 +23,15 @@ function handleSessionData(resultDataString) {
  * @param resultArray jsonObject, needs to be parsed to html
  */
 function handleCartArray(resultArray) {
+    //let jsonArray = JSON.parse(resultArray);
     console.log(resultArray);
-    let item_list = $("#item_list");
+    let item_list = $("#previousItems");
     // change it to html list
     let res = "<ul>";
     for (let i = 0; i < resultArray.length; i++) {
         // each item will be in a bullet point
-        res += "<li>" + resultArray[i] + "</li>";
+
+        res += "<li>" + resultArray[i]["movie_title"] + "</li>";
     }
     res += "</ul>";
 
@@ -43,7 +44,7 @@ function handleCartArray(resultArray) {
  * Submit form content with POST method
  * @param cartEvent
  */
-function handleCartInfo(cartEvent) {
+function handleChangeQuantity(cartEvent) {
     console.log("submit cart form");
     /**
      * When users click the submit button, the browser will not direct
@@ -52,7 +53,7 @@ function handleCartInfo(cartEvent) {
      */
     cartEvent.preventDefault();
 
-    $.ajax("api/index", {
+    $.ajax("api/checkout", {
         method: "POST",
         data: cart.serialize(),
         success: resultDataString => {
@@ -64,11 +65,16 @@ function handleCartInfo(cartEvent) {
     // clear input form
     cart[0].reset();
 }
-
-$.ajax("api/index", {
-    method: "GET",
-    success: handleSessionData
+jQuery.ajax({
+    dataType: "json", // set return data type to JSON
+    method: "GET", // set request method to GET
+    url: "api/checkout", // set request URL as mapped by SingleMovieServlet
+    success: (resultData) => handleShoppingCartResult(resultData),
+    error: function(error) {
+        console.log("ERROR:  " + error);
+    }
+    // set callback function to handle returned data from SingleMovieServlet
 });
 
 // Bind the submit action of the form to a event handler function
-cart.submit(handleCartInfo);
+

@@ -10,12 +10,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 
 // declare WebServlet named SingleMovieServlet, map to URL "/api/single-movie"
 @WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
@@ -109,5 +112,38 @@ public class SingleMovieServlet extends HttpServlet{
         } finally {
             out.close(); // close output stream
         }
+    }
+    /**
+     * handles POST requests to add and show the item list information
+     */
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String item = request.getParameter("movie_id");
+        System.out.print("Printing items added!");
+        System.out.println(item);
+        HttpSession session = request.getSession();
+
+        // get the previous items in a ArrayList
+        ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+        if (previousItems == null) {
+            previousItems = new ArrayList<String>();
+            previousItems.add(item);
+            session.setAttribute("previousItems", previousItems);
+        } else {
+            // prevent corrupted states through sharing under multi-threads
+            // will only be executed by one thread at a time
+            synchronized (previousItems) {
+                previousItems.add(item);
+            }
+        }
+    System.out.print("current cart is : ");
+        System.out.println(previousItems);
+        JsonObject responseJsonObject = new JsonObject();
+
+        JsonArray previousItemsJsonArray = new JsonArray();
+        previousItems.forEach(previousItemsJsonArray::add);
+        responseJsonObject.add("previousItems", previousItemsJsonArray);
+
+        response.getWriter().write(responseJsonObject.toString());
     }
 }
