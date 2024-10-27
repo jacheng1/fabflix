@@ -31,7 +31,7 @@
         }
 
         .custom-navbar .home-button,
-        .custom-navbar .top-20-button,
+        .custom-navbar .result-button,
         .custom-navbar .checkout-button {
             color: #667183;
             background-color: #0f1a26;
@@ -41,7 +41,7 @@
         }
 
         .custom-navbar .home-button:hover,
-        .custom-navbar .top-20-button:hover,
+        .custom-navbar .result-button:hover,
         .custom-navbar .checkout-button:hover {
             color: white;
             background-color: #1b2a39;
@@ -101,6 +101,7 @@
             border: none !important;
             color: white;
             background-color: #785ef5 !important;
+            margin-left: 15px;
         }
 
         .prev-button:hover,
@@ -155,16 +156,7 @@
                 </button>
             </li>
             <li class="nav-item">
-                <button type="button" class="btn btn-primary top-20-button"
-                        onclick="
-                            var basePath = window.location.origin;
-
-                            if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war/index.html';
-                            } else {
-                                window.location.href = basePath + '/cs122b-project1/index.html';
-                            }
-                ">
+                <button type="button" class="btn btn-primary result-button" id="result-button">
                     Result
                 </button>
             </li>

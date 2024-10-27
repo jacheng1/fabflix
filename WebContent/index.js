@@ -23,23 +23,16 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " ")); // return decoded parameter value
 }
 
-// handles movie list table
 function handleMovieListResult(resultData) {
-    console.log("handleMovieListResult: populating movie list table from resultData");
-    console.log("resultData: ", resultData);
-
-    let movieListTableBodyElement = jQuery("#movie_table_body"); // find empty table body by id "movie_table_body"
-    movieListTableBodyElement.empty(); // clear any existing content in case of refresh
+    let movieListTableBodyElement = jQuery("#movie_table_body");
+    movieListTableBodyElement.empty();
 
     // iterate through resultData
     for (let i = 0; i < resultData.length; i++) {
-        // concatenate HTML tags with resultData JSON object
-        let rowHTML = "";
+        let rowHTML = "<tr>";
 
-        rowHTML += "<tr>";
-        rowHTML +=
-            "<th>" +
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
+        rowHTML += "<th>" +
+            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" class="movie-link">'
             + resultData[i]["movie_title"] +
             "</a>" +
             "</th>";
@@ -50,30 +43,23 @@ function handleMovieListResult(resultData) {
         let genreIds = resultData[i]["genre_ids"].split(", ");
         for (let j = 0; j < genreNames.length; j++) {
             rowHTML += '<a href="index.html?genre=' + genreIds[j] + '">' + genreNames[j] + '</a>';
-
-            if (j < genreNames.length - 1) {
-                rowHTML += ", ";
-            }
+            if (j < genreNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th>";
-        rowHTML += "<th>";
+        rowHTML += "</th><th>";
         let starNames = resultData[i]["movie_star"].split(", ");
         let starIds = resultData[i]["star_ids"].split(", ");
         for (let j = 0; j < starNames.length; j++) {
-            rowHTML += '<a href="single-star.html?id=' + starIds[j] + '">' + starNames[j] + '</a>';
-
-            if (j < starNames.length - 1) {
-                rowHTML += ", ";
-            }
+            rowHTML += '<a href="single-star.html?id=' + starIds[j] + '" class="star-link">' + starNames[j] + '</a>';
+            if (j < starNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
-        rowHTML += "</tr>";
+        rowHTML += "</th><th>" + resultData[i]["movie_rating"] + "</th></tr>";
 
         movieListTableBodyElement.append(rowHTML);
     }
 
-    updatePaginationControls();
+    jQuery(document).on("click", ".movie-link, .star-link", savePageState); // bind click event for saving movie list page state after all rows are added
+
+    updatePaginationControls(); // update pagination state with each movie list table load
 }
 
 function updatePaginationControls() {
@@ -86,12 +72,27 @@ function updatePaginationControls() {
     let paginationControls = jQuery("#pagination-controls");
     paginationControls.empty();
 
+    // if there are previous page(s), display prev-button
     if (currentPage > 1) {
         paginationControls.append('<button class="btn btn-primary prev-button" id="prev-button" type="button">← Prev</button>');
     }
+    else {
+        // else, display prev-button as non-clickable
 
+        paginationControls.append('<button class="btn btn-primary prev-button" id="prev-button" type="button" disabled>← Prev</button>');
+    }
+
+    paginationControls.append('<div class="page-number-box" style="display: inline-block; margin: 0 10px; padding: 5px 10px; border-color: #424955 !important; color: #424955 !important; background-color: #181b20 !important;">' +
+        'Page ' + currentPage + ' of ' + totalPages + '</div>'); // append page number box between prev-button and next-button
+
+    // if there are leftover page(s), display next-button
     if (currentPage < totalPages) {
         paginationControls.append('<button class="btn btn-primary next-button" id="next-button" type="button">Next →</button>');
+    }
+    else {
+        // else, display next-button as non-clickable
+
+        paginationControls.append('<button class="btn btn-primary next-button" id="next-button" type="button" disabled>Next →</button>');
     }
 
     jQuery("#prev-button").on("click", function() {
@@ -105,92 +106,154 @@ function updatePaginationControls() {
 
 function navigateToPage(newPage) {
     let url = new URL(window.location.href);
-
     url.searchParams.set("page", newPage);
+
+    sessionStorage.setItem("currentPage", newPage);
+    savePageState();
+
     window.location.href = url.toString();
 }
 
-// get parameter(s) for alphanumeric browse
-let prefix = getParameterByName("prefix") || "";
+function buildAjaxURL(moviesPerPage) {
+    // retrieve all possible parameters for Ajax URL
+    let genreId = getParameterByName("genre") || "";
+    let prefix = getParameterByName("prefix") || "";
+    let title = getParameterByName("title") || "";
+    let year = getParameterByName("year") || "";
+    let director = getParameterByName("director") || "";
+    let starName = getParameterByName("star") || "";
+    let sortBy = getParameterByName("sort") || "";
+    let page = getParameterByName("page") || "1";
 
-// get parameter(s) for genre browse
-let genreId = getParameterByName("genre") || "";
+    let ajaxURL = "api/movielist?";
 
-// get parameter(s) for search
-let title = getParameterByName("title") || "";
-let year = getParameterByName("year") || "";
-let director = getParameterByName("director") || "";
-let starName = getParameterByName("star") || "";
-
-// get parameter(s) for sort
-let moviesPerPage = getParameterByName("n") || "";
-let sortBy = getParameterByName("sort") || "";
-let page = getParameterByName("page") || "1"; // Default to page 1
-
-let ajaxURL = "api/movielist";
-if (prefix) {
-    // create ajax URL for alphanumeric browse
-
-    ajaxURL += "?prefix=" + encodeURIComponent(prefix);
-}
-else if (genreId) {
-    // create ajax URL for genre browse
-
-    ajaxURL += "?genre=" + encodeURIComponent(genreId);
-}
-else if (title || year || director || starName) {
-    // create ajax URL for search
-
-    let searchParams = [];
-
+    // append all non-empty filters to Ajax URL
+    if (genreId) {
+        ajaxURL += `genre=${encodeURIComponent(genreId)}&`;
+    }
+    if (prefix) {
+        ajaxURL += `prefix=${encodeURIComponent(prefix)}&`;
+    }
     if (title) {
-        searchParams.push("title=" + encodeURIComponent(title));
+        ajaxURL += `title=${encodeURIComponent(title)}&`;
     }
-
     if (year) {
-        searchParams.push("year=" + encodeURIComponent(year));
+        ajaxURL += `year=${encodeURIComponent(year)}&`;
     }
-
     if (director) {
-        searchParams.push("director=" + encodeURIComponent(director));
+        ajaxURL += `director=${encodeURIComponent(director)}&`;
     }
-
     if (starName) {
-        searchParams.push("star=" + encodeURIComponent(starName));
+        ajaxURL += `star=${encodeURIComponent(starName)}&`;
     }
+    ajaxURL += `n=${encodeURIComponent(moviesPerPage)}&sort=${encodeURIComponent(sortBy)}&page=${encodeURIComponent(page)}`;
 
-    if (searchParams.length > 0) {
-        ajaxURL += "?" + searchParams.join("&");
-    }
-}
-else if (moviesPerPage || sortBy) {
-    // create ajax URL for update
-
-    let updateParams = [];
-
-    if (moviesPerPage) {
-        updateParams.push("n=" + encodeURIComponent(moviesPerPage));
-    }
-
-    if (sortBy) {
-        updateParams.push("sort=" + encodeURIComponent(sortBy));
-    }
-
-    if (updateParams.length > 0) {
-        ajaxURL += "?" + updateParams.join("&");
-    }
+    return ajaxURL;
 }
 
-if (page) {
-    ajaxURL += (ajaxURL.includes("?") ? "&" : "?") + "page=" + encodeURIComponent(page);
+document.getElementById("result-button").addEventListener("click", function () {
+    savePageState();
+
+    let basePath = window.location.origin;
+    if (basePath.includes('localhost')) {
+        window.location.href = basePath + '/cs122b_project1_war/index.html';
+    } else {
+        window.location.href = basePath + '/cs122b-project1/index.html';
+    }
+});
+
+function savePageState() {
+    let pageState = {
+        genre: getParameterByName("genre") || "",
+        prefix: getParameterByName("prefix") || "",
+        title: getParameterByName("title") || "",
+        year: getParameterByName("year") || "",
+        director: getParameterByName("director") || "",
+        starName: getParameterByName("star") || "",
+        n: getParameterByName("n") || "10",
+        sort: getParameterByName("sort") || "",
+        page: getParameterByName("page") || "1"
+    };
+
+    console.log("savePageState(): Saving page state:", pageState);
+
+    sessionStorage.setItem("movieListPageState", JSON.stringify(pageState));
 }
 
-console.log("Making Ajax request to: ", ajaxURL);
+function restorePageState() {
+    let savedState = sessionStorage.getItem("movieListPageState");
 
-// makes HTTP GET request; upon success, uses callback function handleMovieListResult()
-jQuery.ajax({
-    dataType: "json", // set return data type
-    method: "GET", // set request method
-    url: ajaxURL, // set request URL as mapped by MovieListServlet
-    success: (resultData) => handleMovieListResult(resultData) // set callback function to handle returned data from MovieListServlet
+    if (savedState) {
+        let pageState = JSON.parse(savedState);
+
+        // only restore movies-per-page/sort-by settings and URL if there are no existing parameters
+        if (!window.location.search) {
+            // set URL parameters without reloading if it's the first load
+            let url = new URL(window.location.href);
+
+            Object.keys(pageState).forEach(key => {
+                if (pageState[key]) {
+                    url.searchParams.set(key, pageState[key]);
+                } else {
+                    url.searchParams.delete(key);
+                }
+            });
+
+            history.replaceState(null, "", url.toString());
+        }
+
+        console.log("restorePageState(): Restoring page state:", pageState);
+        fetchMovies();
+    } else {
+        fetchMovies();
+    }
+}
+
+// call restorePageState() and fetchMovies() on page load
+jQuery(document).ready(() => {
+    restorePageState();
+    fetchMovies();
+});
+
+// execute the AJAX request with all current filters when the page loads
+function fetchMovies() {
+    let moviesPerPage = getParameterByName("n") || "10";
+
+    let ajaxURL = buildAjaxURL(moviesPerPage);
+    console.log("Making Ajax request to: ", ajaxURL);
+
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: ajaxURL,
+        success: (resultData) => handleMovieListResult(resultData)
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    jQuery(".update-button").on("click", function (event) {
+        event.preventDefault();
+
+        let moviesPerPage = jQuery("#n").val();
+        let sortBy = jQuery("#sort").val();
+
+        let url = new URL(window.location.href); // update URL parameters based on selections
+
+        if (moviesPerPage) {
+            url.searchParams.set("n", moviesPerPage); // set if selected
+        } else {
+            url.searchParams.delete("n"); // remove if not selected
+        }
+
+        if (sortBy) {
+            url.searchParams.set("sort", sortBy); // set if selected
+        } else {
+            url.searchParams.delete("sort"); // remove if not selected
+        }
+
+        window.history.replaceState(null, "", url.toString()); // update browser URL without reloading the page
+
+        savePageState();
+        fetchMovies();
+    });
 });
