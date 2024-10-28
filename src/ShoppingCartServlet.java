@@ -47,7 +47,6 @@ public class ShoppingCartServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         JsonObject responseJsonObject = new JsonObject();
-        System.out.println("Here in doGet in ShoppingCartServlet");
 
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
         PrintWriter out = response.getWriter();
@@ -71,7 +70,6 @@ public class ShoppingCartServlet extends HttpServlet {
                 }
             }
             for (String previousItem : previousItems) {
-                System.out.println("im jere" + previousItem);
                 PreparedStatement statement = conn.prepareStatement(query); // declare statement
                 statement.setString(1, previousItem);
                 ResultSet rs = statement.executeQuery();
@@ -113,7 +111,6 @@ public class ShoppingCartServlet extends HttpServlet {
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String movieID= request.getParameter("movie_id");
     String cartEvent = request.getParameter("cartEvent");
-    System.out.println("are you null?" + movieID + " " + cartEvent);
     HttpSession session = request.getSession();
 
     // get the previous items in a ArrayList

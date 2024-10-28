@@ -26,33 +26,34 @@ function getParameterByName(target) {
 function handleMovieListResult(resultData) {
     let movieListTableBodyElement = jQuery("#movie_table_body");
     movieListTableBodyElement.empty();
-
+    console.log("Iterating through movielist result");
     // iterate through resultData
     for (let i = 0; i < resultData.length; i++) {
-        let rowHTML = "<tr>";
+        let rowHTML = "<tr class='item-row' data-movie-title=" + resultData[i]['movie_title'] + " data-movie-id='"+ resultData[i]['movie_id'] +"'>";
 
-        rowHTML += "<th>" +
+        rowHTML += "<td>" +
             '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" class="movie-link">'
             + resultData[i]["movie_title"] +
             "</a>" +
-            "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
-        rowHTML += "<th>";
+            "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
+        rowHTML += "<td>";
         let genreNames = resultData[i]["movie_genre"].split(", ");
         let genreIds = resultData[i]["genre_ids"].split(", ");
         for (let j = 0; j < genreNames.length; j++) {
             rowHTML += '<a href="index.html?genre=' + genreIds[j] + '">' + genreNames[j] + '</a>';
             if (j < genreNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th><th>";
+        rowHTML += "</td><td>";
         let starNames = resultData[i]["movie_star"].split(", ");
         let starIds = resultData[i]["star_ids"].split(", ");
         for (let j = 0; j < starNames.length; j++) {
             rowHTML += '<a href="single-star.html?id=' + starIds[j] + '" class="star-link">' + starNames[j] + '</a>';
             if (j < starNames.length - 1) rowHTML += ", ";
         }
-        rowHTML += "</th><th>" + resultData[i]["movie_rating"] + "</th></tr>";
+        rowHTML += "</td><td>"+resultData[i]['movie_rating']+"</td>";
+        rowHTML += "<td><button class='add-to-cart-button'>Add To Cart</button></td></tr>";
 
         movieListTableBodyElement.append(rowHTML);
     }
@@ -226,7 +227,10 @@ function fetchMovies() {
         dataType: "json",
         method: "GET",
         url: ajaxURL,
-        success: (resultData) => handleMovieListResult(resultData)
+        success: (resultData) => handleMovieListResult(resultData),
+        error: function(error) {
+            console.log(error);
+        }
     });
 }
 
@@ -256,4 +260,78 @@ document.addEventListener("DOMContentLoaded", function () {
         savePageState();
         fetchMovies();
     });
+
+
+
+
+
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("listening for event");
+    function handleAddToCart(button) {
+        console.log("handle Change quantity");
+        /**
+         * When button is pressed then change in quantity will update the session's previousItems attribute
+         * users to the url defined in HTyML form. Instead, it will call this
+         * event handler when the event is triggered.
+         */
+        const row = button.closest('tr');
+        const movieId = row.getAttribute('data-movie-id');
+        const movieTitle = row.getAttribute('data-movie-title');
+
+        $.ajax("api/single-movie", {
+            method: "POST",
+            data: {movie_id : movieId},
+            success: function(response) {
+                console.log('updated quantity');
+                alert("Added "+ movieTitle + " to cart!");
+            },
+            error: function(error) {
+                console.log("ERROR: " + error);
+            }
+        });
+
+        // clear input form
+    }
+
+    document.querySelector('#movie_table_body').addEventListener('click', (event) => {
+        if (event.target.classList.contains('add-to-cart-button')) {
+            handleAddToCart(event.target);
+        } else {
+            console.log("button clicked but not add to cart");
+        }
+    });
+});
+
+
+
+
+function handleAddToCart (button) {
+
+    console.log("add movie to cart");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    button.preventDefault();
+    const row = button.closest('tr');
+    const movieId = row.getAttribute('data-movie-id');
+
+    $.ajax("api/single-movie", {
+        method: "POST",
+        data: {movie_id : movieId},
+        success: function(data)  {
+            alert('Movie added to cart');
+        },
+        error: function(error) {
+            console.error('ERROR: ', error);
+        }
+    });
+    // clear input form
+}
+
+document.querySelector('#movie_table_body').addEventListener('click',(event) => {
+    if (event.target.classList.contains('add-to-cart')) handleAddToCart(event.target);
 });
