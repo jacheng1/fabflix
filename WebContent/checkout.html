@@ -111,6 +111,11 @@
       background-color: #0d1116;
     }
 
+    .subtotal-container {
+      text-align: right;
+      margin-right: 60px;
+    }
+
   </style>
 </head>
 <body>
@@ -195,10 +200,10 @@
   </thead>
   <tbody id=previousItems></tbody>
 </table>
-<h2 id=subtotal></h2>
-
-<button type="button" class="btn btn-primary proceed-to-payment-button"
-        onclick="
+<div class="subtotal-container">
+  <h2 id=subtotal></h2>
+  <button type="button" class="btn btn-primary proceed-to-payment-button"
+          onclick="
           var basePath = window.location.origin;
 
           if (basePath.includes('localhost')) {
@@ -207,8 +212,9 @@
             window.location.href = basePath + '/cs122b-project1/payment.html';
           }
         ">
-  Proceed to Payment
-</button>
+    Proceed to Payment
+  </button>
+</div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
