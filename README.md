@@ -19,8 +19,8 @@
 ● Kristen: AWS instance setup, web application deployment on AWS instance, Single Star Page, video demonstration
 
 #### Project 2:
-● Jacky: Login Page, Main Page, extend Movie List Page, extend Single Movie/Star Page, update jump functionality, Payment Page\
-● Kristen: Shopping Cart Page, Confirmation Page, Add-to-Cart feature on Single Movie Page, video demonstration
+● Jacky: Login Page, Main Page, extend Movie List Page, extend Single Movie/Star Page, update jump functionality, Payment Page, start progress on Confirmation Page\
+● Kristen: Shopping Cart Page, Add-to-Cart feature on Single Movie Page, video demonstration
 
 
 
