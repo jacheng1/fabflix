@@ -47,7 +47,6 @@ public class ShoppingCartServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         JsonObject responseJsonObject = new JsonObject();
-        System.out.println("Here in doGet in ShoppingCartServlet");
 
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
 
@@ -72,7 +71,6 @@ public class ShoppingCartServlet extends HttpServlet {
                 }
             }
             for (String previousItem : previousItems) {
-                System.out.println("im jere" + previousItem);
 
                 PreparedStatement statement = conn.prepareStatement(query); // declare statement
                 statement.setString(1, previousItem);
@@ -114,43 +112,36 @@ public class ShoppingCartServlet extends HttpServlet {
         }
     }
 
-    /**
-     * handles POST requests to add and show the item list information
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String movieID= request.getParameter("movie_id");
-        String cartEvent = request.getParameter("cartEvent");
+/**
+ * handles POST requests to add and show the item list information
+ */
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String movieID= request.getParameter("movie_id");
+    String cartEvent = request.getParameter("cartEvent");
+    HttpSession session = request.getSession();
 
-        System.out.println("are you null?" + movieID + " " + cartEvent);
+    // get the previous items in a ArrayList
+    ArrayList<String> previousItems = (ArrayList<String>)session.getAttribute("previousItems");
+    if (previousItems == null) {
+        previousItems = new ArrayList<String>();
+        previousItems.add(movieID);
+        session.setAttribute("previousItems", previousItems);
+    } else {
+        // prevent corrupted states through sharing under multi-threads
+        // will only be executed by one thread at a time
+        synchronized (previousItems) {
+            switch (cartEvent) {
+                case "add":
+                    previousItems.add(movieID);
+                    break;
+                case "subtract":
+                    previousItems.remove(movieID);
+                    break;
+                case "remove-from-cart":
+                    previousItems.removeIf(item -> item.equals(movieID));
+                    break;
+            }
 
-        HttpSession session = request.getSession();
-
-        // get the previous items in a ArrayList
-        ArrayList<String> previousItems = (ArrayList<String>)session.getAttribute("previousItems");
-
-        if (previousItems == null) {
-            previousItems = new ArrayList<String>();
-            previousItems.add(movieID);
-
-            session.setAttribute("previousItems", previousItems);
-        } else {
-            // prevent corrupted states through sharing under multi-threads
-            // will only be executed by one thread at a time
-            synchronized (previousItems) {
-                switch (cartEvent) {
-                    case "add":
-                        previousItems.add(movieID);
-
-                        break;
-                    case "subtract":
-                        previousItems.remove(movieID);
-
-                        break;
-                    case "remove-from-cart":
-                        previousItems.removeIf(item -> item.equals(movieID));
-
-                        break;
-                }
             }
         }
 
