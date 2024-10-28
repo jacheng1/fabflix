@@ -7,14 +7,28 @@
 
 ### Demonstration
 
-[Video link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)
+[Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
+[Project 2 Video Link]()
 
 
 
 ### Member Contributions
 
+#### Project 1:
 ● Jacky: repository setup, Movie List Page, Single Movie Page, Single Star Page\
 ● Kristen: AWS instance setup, web application deployment on AWS instance, Single Star Page, video demonstration
+
+#### Project 2:
+● Jacky: Login Page, Main Page, extend Movie List Page, extend Single Movie/Star Page, update jump functionality, Payment Page\
+● Kristen: Shopping Cart Page, Confirmation Page, video demonstration
+
+
+
+### Substring Matching
+Substring matching is used in conjunction with the LIKE SQL predicate in MovieListServlet.java to\
+fetch records from moviedb with m.title, m.director, and s.name that have the retrieved parameters\
+title, director, and name at any position, respectively. Next, these query excerpts are appended to\
+the StringBuilder object, queryBuilder, which contains an incomplete SQL query.
 
 
 
