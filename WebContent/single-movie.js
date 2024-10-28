@@ -56,10 +56,39 @@ function handleSingleMovieResult(resultData) {
 
 let movieId = getParameterByName("id");
 
+
 // makes HTTP GET request; upon success, uses callback function handleSingleMovieResult()
 jQuery.ajax({
     dataType: "json", // set return data type to JSON
     method: "GET", // set request method to GET
     url: "api/single-movie?id=" + movieId, // set request URL as mapped by SingleMovieServlet
     success: (resultData) => handleSingleMovieResult(resultData) // set callback function to handle returned data from SingleMovieServlet
+
+});
+document.addEventListener('DOMContentLoaded', function ()
+{
+    const addToCartButton = document.getElementById('add-to-cart-button');
+    function handleAddToCart(cartEvent) {
+        console.log("submit cart form");
+        /**
+         * When users click the submit button, the browser will not direct
+         * users to the url defined in HTML form. Instead, it will call this
+         * event handler when the event is triggered.
+         */
+        cartEvent.preventDefault();
+        let
+            movie_info = $('#movie')
+        $.ajax("api/single-movie", {
+            method: "POST",
+            data: {movie_id : movieId},
+            success: function(data)  {
+                alert('Movie added to cart');
+            },
+            error: function(error) {
+                console.error('ERROR: ', error);
+            }
+        });
+        // clear input form
+    }
+    addToCartButton.addEventListener('click', handleAddToCart)
 });
