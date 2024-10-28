@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This IndexServlet is declared in the web annotation below,
@@ -53,14 +55,23 @@ public class ShoppingCartServlet extends HttpServlet {
         try (Connection conn = dataSource.getConnection()) {
             // define SQL query
 
-            String query = "SELECT m.id, m.title " +
+            String query = "SELECT m.id, m.title, m.price " +
                     "FROM moviedb.movies m " +
                     "WHERE m.id = ? " +
-                    "GROUP BY m.id, m.title";
+                    "GROUP BY m.id, m.title, m.price";
 
             JsonArray jsonArray = new JsonArray();
+            Map<String, Integer> movieQuantity = new HashMap<>();
+
+            for (String item : previousItems) {
+                if (movieQuantity.containsKey(item)) {
+                    movieQuantity.put(item, movieQuantity.get(item) + 1);
+                }   else {
+                    movieQuantity.put(item, 1);
+                }
+            }
             for (String previousItem : previousItems) {
-                System.out.println(previousItem);
+                System.out.println("im jere" + previousItem);
                 PreparedStatement statement = conn.prepareStatement(query); // declare statement
                 statement.setString(1, previousItem);
                 ResultSet rs = statement.executeQuery();
@@ -71,7 +82,8 @@ public class ShoppingCartServlet extends HttpServlet {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("movie_id", movie_id);
                     jsonObject.addProperty("movie_title", movie_title);
-
+                    jsonObject.addProperty("price", rs.getDouble("price"));
+                    jsonObject.addProperty("quantity", movieQuantity.get(movie_id));
                     jsonArray.add(jsonObject);
                 }
                 rs.close(); // close rs
@@ -99,23 +111,35 @@ public class ShoppingCartServlet extends HttpServlet {
  * handles POST requests to add and show the item list information
  */
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String item = request.getParameter("item");
-    System.out.println(item);
+    String movieID= request.getParameter("movie_id");
+    String cartEvent = request.getParameter("cartEvent");
+    System.out.println("are you null?" + movieID + " " + cartEvent);
     HttpSession session = request.getSession();
 
     // get the previous items in a ArrayList
-    ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+    ArrayList<String> previousItems = (ArrayList<String>)session.getAttribute("previousItems");
     if (previousItems == null) {
         previousItems = new ArrayList<String>();
-        previousItems.add(item);
+        previousItems.add(movieID);
         session.setAttribute("previousItems", previousItems);
     } else {
         // prevent corrupted states through sharing under multi-threads
         // will only be executed by one thread at a time
         synchronized (previousItems) {
-            previousItems.add(item);
+            switch (cartEvent) {
+                case "add":
+                    previousItems.add(movieID);
+                    break;
+                case "subtract":
+                    previousItems.remove(movieID);
+                    break;
+                case "remove-from-cart":
+                    previousItems.removeIf(item -> item.equals(movieID));
+                    break;
+            }
         }
     }
+
 
     JsonObject responseJsonObject = new JsonObject();
 

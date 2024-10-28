@@ -72,6 +72,18 @@
     h3 {
       color: white;
     }
+
+    #shopping-cart-table{
+      background-color: #0d1116;
+      color: white;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #181b20;
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+      background-color: #0d1116;
+    }
   </style>
 </head>
 <body>
@@ -143,9 +155,19 @@
   </div>
 </nav>
 
-<h1 class="mt-5 text-center">Single Movie Page</h1>
+<h1 class="mt-5 text-center">Shopping Cart</h1>
+<table id=shopping-cart-table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Price</th>
+    <th>Quantity</th>
 
-<h3 id="previousItems"></h3>
+  </tr>
+  </thead>
+  <tbody id=previousItems></tbody>
+</table>
+
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -154,8 +176,18 @@
 
 <!-- Load single-movie.js file -->
 <script src="checkout.js"></script>
+<button type="button" class="btn btn-primary proceed-to-payment-button"
+        onclick="
+                          var basePath = window.location.origin;
 
-<button id="place-order-button">Place Order</button>
-<script src="place-order.js"></script>
+                          if (basePath.includes('localhost')) {
+                            window.location.href = basePath + '/cs122b_project1_war_exploded/payment.html';
+                          } else {
+                            window.location.href = basePath + '/cs122b-project1/payment.html';
+                          }
+                ">
+  Proceed to Payment
+</button>
+
 </body>
 </html>
