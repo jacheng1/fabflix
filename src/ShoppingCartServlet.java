@@ -50,6 +50,7 @@ public class ShoppingCartServlet extends HttpServlet {
         System.out.println("Here in doGet in ShoppingCartServlet");
 
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+
         PrintWriter out = response.getWriter();
         System.out.println(1);
         try (Connection conn = dataSource.getConnection()) {
@@ -72,13 +73,17 @@ public class ShoppingCartServlet extends HttpServlet {
             }
             for (String previousItem : previousItems) {
                 System.out.println("im jere" + previousItem);
+
                 PreparedStatement statement = conn.prepareStatement(query); // declare statement
                 statement.setString(1, previousItem);
+
                 ResultSet rs = statement.executeQuery();
+
                 while(rs.next()) {
                     String movie_id = rs.getString("id");
                     String movie_title = rs.getString("title");
                     // double price = rs.getString("price");
+
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("movie_id", movie_id);
                     jsonObject.addProperty("movie_title", movie_title);
@@ -89,6 +94,7 @@ public class ShoppingCartServlet extends HttpServlet {
                 rs.close(); // close rs
                 statement.close();
             }
+
              // set parameter shown as "?" in SQL query to id retrieved from URL; 1 indicates first "?" in query
             System.out.println(jsonArray.toString());
             out.write(jsonArray.toString()); // write JSON string to output
@@ -101,52 +107,59 @@ public class ShoppingCartServlet extends HttpServlet {
             out.write(jsonObject.toString());
 
             request.getServletContext().log("Error:", e);
+
             response.setStatus(500); // set response status to 500 (Internal Server Error)
         } finally {
             out.close(); // close output stream
         }
     }
 
-/**
- * handles POST requests to add and show the item list information
- */
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String movieID= request.getParameter("movie_id");
-    String cartEvent = request.getParameter("cartEvent");
-    System.out.println("are you null?" + movieID + " " + cartEvent);
-    HttpSession session = request.getSession();
+    /**
+     * handles POST requests to add and show the item list information
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String movieID= request.getParameter("movie_id");
+        String cartEvent = request.getParameter("cartEvent");
 
-    // get the previous items in a ArrayList
-    ArrayList<String> previousItems = (ArrayList<String>)session.getAttribute("previousItems");
-    if (previousItems == null) {
-        previousItems = new ArrayList<String>();
-        previousItems.add(movieID);
-        session.setAttribute("previousItems", previousItems);
-    } else {
-        // prevent corrupted states through sharing under multi-threads
-        // will only be executed by one thread at a time
-        synchronized (previousItems) {
-            switch (cartEvent) {
-                case "add":
-                    previousItems.add(movieID);
-                    break;
-                case "subtract":
-                    previousItems.remove(movieID);
-                    break;
-                case "remove-from-cart":
-                    previousItems.removeIf(item -> item.equals(movieID));
-                    break;
+        System.out.println("are you null?" + movieID + " " + cartEvent);
+
+        HttpSession session = request.getSession();
+
+        // get the previous items in a ArrayList
+        ArrayList<String> previousItems = (ArrayList<String>)session.getAttribute("previousItems");
+
+        if (previousItems == null) {
+            previousItems = new ArrayList<String>();
+            previousItems.add(movieID);
+
+            session.setAttribute("previousItems", previousItems);
+        } else {
+            // prevent corrupted states through sharing under multi-threads
+            // will only be executed by one thread at a time
+            synchronized (previousItems) {
+                switch (cartEvent) {
+                    case "add":
+                        previousItems.add(movieID);
+
+                        break;
+                    case "subtract":
+                        previousItems.remove(movieID);
+
+                        break;
+                    case "remove-from-cart":
+                        previousItems.removeIf(item -> item.equals(movieID));
+
+                        break;
+                }
             }
         }
+
+        JsonObject responseJsonObject = new JsonObject();
+        JsonArray previousItemsJsonArray = new JsonArray();
+        previousItems.forEach(previousItemsJsonArray::add);
+
+        responseJsonObject.add("previousItems", previousItemsJsonArray);
+
+        response.getWriter().write(responseJsonObject.toString());
     }
-
-
-    JsonObject responseJsonObject = new JsonObject();
-
-    JsonArray previousItemsJsonArray = new JsonArray();
-    previousItems.forEach(previousItemsJsonArray::add);
-    responseJsonObject.add("previousItems", previousItemsJsonArray);
-
-    response.getWriter().write(responseJsonObject.toString());
-}
 }
