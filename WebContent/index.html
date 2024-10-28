@@ -122,7 +122,6 @@
 
         #movie_table th, #movie_table td {
             border: 1px solid transparent;
-
         }
 
         .table-striped tbody tr:nth-of-type(odd) {
@@ -132,18 +131,16 @@
         .table-striped tbody tr:nth-of-type(even) {
             background-color: #0d1116;
         }
-        .add-to-cart-button {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
+
+        #movie_table button {
+            border-color: #4CAF50 !important;
+            color: #4CAF50 !important;
+        }
+
+        #movie_table button:hover {
+            border-color: #4CAF50 !important;
+            color: #ffffff !important;
+            background-color: #4CAF50 !important;
         }
     </style>
 </head>
@@ -161,7 +158,7 @@
                             var basePath = window.location.origin;
 
                             if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war_exploded/main.html';
+                                window.location.href = basePath + '/cs122b_project1_war/main.html';
                             } else {
                                 window.location.href = basePath + '/cs122b-project1/main.html';
                             }
@@ -180,7 +177,7 @@
                           var basePath = window.location.origin;
 
                           if (basePath.includes('localhost')) {
-                            window.location.href = basePath + '/cs122b_project1_war_exploded/checkout.html';
+                            window.location.href = basePath + '/cs122b_project1_war/checkout.html';
                           } else {
                             window.location.href = basePath + '/cs122b-project1/checkout.html';
                           }

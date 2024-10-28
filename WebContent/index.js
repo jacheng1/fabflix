@@ -53,7 +53,7 @@ function handleMovieListResult(resultData) {
             if (j < starNames.length - 1) rowHTML += ", ";
         }
         rowHTML += "</td><td>"+resultData[i]['movie_rating']+"</td>";
-        rowHTML += "<td><button class='add-to-cart-button'>Add To Cart</button></td></tr>";
+        rowHTML += "<td><button type='button' class='btn btn-outline-primary add-to-cart-button'>Add To Cart</button></td></tr>";
 
         movieListTableBodyElement.append(rowHTML);
     }
