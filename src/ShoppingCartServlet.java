@@ -49,6 +49,7 @@ public class ShoppingCartServlet extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+
         PrintWriter out = response.getWriter();
         System.out.println(1);
         try (Connection conn = dataSource.getConnection()) {
@@ -70,13 +71,17 @@ public class ShoppingCartServlet extends HttpServlet {
                 }
             }
             for (String previousItem : previousItems) {
+
                 PreparedStatement statement = conn.prepareStatement(query); // declare statement
                 statement.setString(1, previousItem);
+
                 ResultSet rs = statement.executeQuery();
+
                 while(rs.next()) {
                     String movie_id = rs.getString("id");
                     String movie_title = rs.getString("title");
                     // double price = rs.getString("price");
+
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("movie_id", movie_id);
                     jsonObject.addProperty("movie_title", movie_title);
@@ -87,6 +92,7 @@ public class ShoppingCartServlet extends HttpServlet {
                 rs.close(); // close rs
                 statement.close();
             }
+
              // set parameter shown as "?" in SQL query to id retrieved from URL; 1 indicates first "?" in query
             System.out.println(jsonArray.toString());
             out.write(jsonArray.toString()); // write JSON string to output
@@ -99,6 +105,7 @@ public class ShoppingCartServlet extends HttpServlet {
             out.write(jsonObject.toString());
 
             request.getServletContext().log("Error:", e);
+
             response.setStatus(500); // set response status to 500 (Internal Server Error)
         } finally {
             out.close(); // close output stream
@@ -134,16 +141,16 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
                     previousItems.removeIf(item -> item.equals(movieID));
                     break;
             }
+
+            }
         }
+
+        JsonObject responseJsonObject = new JsonObject();
+        JsonArray previousItemsJsonArray = new JsonArray();
+        previousItems.forEach(previousItemsJsonArray::add);
+
+        responseJsonObject.add("previousItems", previousItemsJsonArray);
+
+        response.getWriter().write(responseJsonObject.toString());
     }
-
-
-    JsonObject responseJsonObject = new JsonObject();
-
-    JsonArray previousItemsJsonArray = new JsonArray();
-    previousItems.forEach(previousItemsJsonArray::add);
-    responseJsonObject.add("previousItems", previousItemsJsonArray);
-
-    response.getWriter().write(responseJsonObject.toString());
-}
 }

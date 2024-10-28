@@ -65,10 +65,19 @@
             background-color: #907EEC !important;
         }
 
-        h1 {
+        .add-to-cart-button {
+            border: none !important;
             color: white;
+            background-color: #785ef5 !important;
+            margin-top: 15px;
         }
 
+        .add-to-cart-button:hover {
+            color: white !important;
+            background-color: #907EEC !important;
+        }
+
+        h1,
         h3 {
             color: white;
         }
@@ -101,7 +110,7 @@
                             var basePath = window.location.origin;
 
                             if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war_exploded/main.html';
+                                window.location.href = basePath + '/cs122b_project1_war/main.html';
                             } else {
                                 window.location.href = basePath + '/cs122b-project1/main.html';
                             }
@@ -115,7 +124,7 @@
                             var basePath = window.location.origin;
 
                             if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war_exploded/index.html';
+                                window.location.href = basePath + '/cs122b_project1_war/index.html';
                             } else {
                                 window.location.href = basePath + '/cs122b-project1/index.html';
                             }
@@ -129,7 +138,7 @@
                           var basePath = window.location.origin;
 
                           if (basePath.includes('localhost')) {
-                            window.location.href = basePath + '/cs122b_project1_war_exploded/checkout.html';
+                            window.location.href = basePath + '/cs122b_project1_war/checkout.html';
                           } else {
                             window.location.href = basePath + '/cs122b-project1/checkout.html';
                           }
@@ -160,6 +169,8 @@
 
 <h3 id="movie_info"></h3>
 
+<button type="button" class="btn btn-primary add-to-cart-button" id="add-to-cart-button">Add to Cart</button>
+
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -167,6 +178,7 @@
 
 <!-- Load single-movie.js file -->
 <script src="single-movie.js"></script>
+
 <button class='cartbutton' id="add-to-cart-button">Add to Cart</button>
 
 
