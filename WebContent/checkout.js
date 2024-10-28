@@ -30,8 +30,9 @@ function handleCartArray(resultArray) {
     // change it to html list
     let moviesDisplayed = [];
 
-
+    let totalPrice = 0;
     for (let i = 0; i < resultArray.length; i++) {
+        totalPrice += resultArray[i]['price'];
         if (!moviesDisplayed.includes(resultArray[i]['movie_id'])) {
             moviesDisplayed.push(resultArray[i]['movie_id']);
             let res = "";
@@ -56,7 +57,8 @@ function handleCartArray(resultArray) {
         }
 
     }
-
+    let subtotalElement = jQuery("#subtotal");
+    subtotalElement.append("<div class='checkout-sumary'> <tr><td>Subtotal:</td><td class='price'>$" + totalPrice + "</td><td style='color: white;'></td></tr>");
     // clear the old array and show the new array in the frontend
 
 }
