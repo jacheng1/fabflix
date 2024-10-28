@@ -65,18 +65,33 @@
       background-color: #907EEC !important;
     }
 
-    h1 {
+    .proceed-to-payment-button {
+      border: none !important;
       color: white;
+      background-color: #785ef5 !important;
+      margin-top: 15px;
     }
 
+    .proceed-to-payment-button:hover {
+      color: white !important;
+      background-color: #907EEC !important;
+    }
+
+    h1,
+    h2,
     h3 {
       color: white;
     }
 
-    #shopping-cart-table{
+    #shopping-cart-table {
       background-color: #0d1116;
       color: white;
     }
+
+    #shopping-cart-table th, #shopping-cart-table td {
+      border: 1px solid transparent;
+    }
+
     .table-striped tbody tr:nth-of-type(odd) {
       background-color: #181b20;
     }
@@ -98,13 +113,13 @@
       <li class="nav-item">
         <button type="button" class="btn btn-primary home-button"
                 onclick="
-                            var basePath = window.location.origin;
+                  var basePath = window.location.origin;
 
-                            if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war_exploded/main.html';
-                            } else {
-                                window.location.href = basePath + '/cs122b-project1/main.html';
-                            }
+                  if (basePath.includes('localhost')) {
+                      window.location.href = basePath + '/cs122b_project1_war/main.html';
+                  } else {
+                      window.location.href = basePath + '/cs122b-project1/main.html';
+                  }
                 ">
           Home
         </button>
@@ -112,13 +127,13 @@
       <li class="nav-item">
         <button type="button" class="btn btn-primary top-20-button"
                 onclick="
-                            var basePath = window.location.origin;
+                  var basePath = window.location.origin;
 
-                            if (basePath.includes('localhost')) {
-                                window.location.href = basePath + '/cs122b_project1_war_exploded/index.html';
-                            } else {
-                                window.location.href = basePath + '/cs122b-project1/index.html';
-                            }
+                  if (basePath.includes('localhost')) {
+                      window.location.href = basePath + '/cs122b_project1_war/index.html';
+                  } else {
+                      window.location.href = basePath + '/cs122b-project1/index.html';
+                  }
                 ">
           Result
         </button>
@@ -126,13 +141,13 @@
       <li class="nav-item">
         <button type="button" class="btn btn-primary checkout-button"
                 onclick="
-                          var basePath = window.location.origin;
+                  var basePath = window.location.origin;
 
-                          if (basePath.includes('localhost')) {
-                            window.location.href = basePath + '/cs122b_project1_war_exploded/checkout.html';
-                          } else {
-                            window.location.href = basePath + '/cs122b-project1/checkout.html';
-                          }
+                  if (basePath.includes('localhost')) {
+                    window.location.href = basePath + '/cs122b_project1_war/checkout.html';
+                  } else {
+                    window.location.href = basePath + '/cs122b-project1/checkout.html';
+                  }
                 ">
           Checkout
         </button>
@@ -161,14 +176,28 @@
   <thead>
   <tr>
     <th>Title</th>
-    <th>Price</th>
     <th>Quantity</th>
-
+    <th>Delete</th>
+    <th>Price</th>
+    <th>Total</th>
   </tr>
   </thead>
   <tbody id=previousItems></tbody>
 </table>
 <h2 id=subtotal></h2>
+
+<button type="button" class="btn btn-primary proceed-to-payment-button"
+        onclick="
+          var basePath = window.location.origin;
+
+          if (basePath.includes('localhost')) {
+            window.location.href = basePath + '/cs122b_project1_war/payment.html';
+          } else {
+            window.location.href = basePath + '/cs122b-project1/payment.html';
+          }
+        ">
+  Proceed to Payment
+</button>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -177,18 +206,6 @@
 
 <!-- Load single-movie.js file -->
 <script src="checkout.js"></script>
-<button type="button" class="btn btn-primary proceed-to-payment-button"
-        onclick="
-                          var basePath = window.location.origin;
-
-                          if (basePath.includes('localhost')) {
-                            window.location.href = basePath + '/cs122b_project1_war_exploded/payment.html';
-                          } else {
-                            window.location.href = basePath + '/cs122b-project1/payment.html';
-                          }
-                ">
-  Proceed to Payment
-</button>
 
 </body>
 </html>
