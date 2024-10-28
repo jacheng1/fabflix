@@ -20,7 +20,7 @@
 
 #### Project 2:
 ● Jacky: Login Page, Main Page, extend Movie List Page, extend Single Movie/Star Page, update jump functionality, Payment Page\
-● Kristen: Shopping Cart Page, Confirmation Page, video demonstration
+● Kristen: Shopping Cart Page, Confirmation Page, Add-to-Cart feature on Single Movie Page, video demonstration
 
 
 
