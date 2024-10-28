@@ -87,6 +87,11 @@
       color: #ffffff;
     }
 
+    p,
+    span {
+      color: #ffffff;
+    }
+
     form {
       display: flex;
       flex-direction: column;
@@ -206,6 +211,7 @@
       <label for="inputExpirationDate">Expiration date</label>
       <input class="form-control" id="inputExpirationDate" name="expiration_date" type="text" placeholder="yyyy/mm/dd">
     </div>
+    <p>Total order amount: <span id="totalPriceDisplay"></span></p>
     <button class="btn btn-primary btn-lg" type="submit" value="Place Order">Place Order</button>
   </form>
 </div>

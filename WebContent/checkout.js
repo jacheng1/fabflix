@@ -64,8 +64,8 @@ function handleCartArray(resultArray) {
     }
 
     updateSubtotal(totalPrice);
+    sessionStorage.setItem('totalPrice', totalPrice);
     // clear the old array and show the new array in the frontend
-
 }
 
 // Update the subtotal display
@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quantityE.textContent = quantity;
         rowMoviePriceE.textContent = `$${rowMoviePrice.toFixed(2)}`;
         updateSubtotal(totalPrice);
+        sessionStorage.setItem('totalPrice', totalPrice);
 
         $.ajax("api/checkout", {
             method: "POST",

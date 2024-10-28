@@ -46,5 +46,15 @@ function submitPaymentForm(formSubmitEvent) {
     );
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const totalPrice = sessionStorage.getItem("totalPrice");
+
+    if (totalPrice) {
+        document.getElementById("totalPriceDisplay").textContent = `$${parseFloat(totalPrice).toFixed(2)}`;
+    } else {
+        document.getElementById("totalPriceDisplay").textContent = "0.00";
+    }
+});
+
 // bind the submit action of payment form to a handler function
 payment_form.submit(submitPaymentForm);
