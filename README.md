@@ -8,7 +8,7 @@
 ### Demonstration
 
 [Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
-[Project 2 Video Link]()
+[Project 2 Video Link](https://youtu.be/31G4-Dydruw)
 
 
 
