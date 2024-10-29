@@ -75,6 +75,12 @@
       text-align: center;
     }
 
+    .main-container {
+      width: 100%;
+      max-width: 1750px;
+      margin: 0 auto;
+    }
+
     .browse-container {
       display: block;
       border-radius: 10px;
@@ -104,6 +110,61 @@
 
     .title-row a:hover {
       text-decoration: underline;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .wrapper {
+      display: grid;
+      grid-template-columns: repeat(3, 100%);
+      overflow: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .wrapper section {
+      width: 100%;
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      margin: 20px 0;
+    }
+
+    .wrapper section .item {
+      padding: 0 2px;
+      transition: 250ms all;
+    }
+
+    .wrapper section .item:hover {
+      margin: 0 40px;
+      transform: scale(1.2);
+    }
+
+    .wrapper section a {
+      position: absolute;
+      color: #fff;
+      text-decoration: none;
+      font-size: 6em;
+      background: rgb(0, 0, 0);
+      width: 80px;
+      padding: 20px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .wrapper section a:nth-of-type(1) {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(-90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    }
+
+    .wrapper section a:nth-of-type(2) {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
     }
   </style>
 </head>
@@ -176,18 +237,79 @@
   </div>
 </nav>
 
-<div class="browse-container">
-  <h2>Browse by Movie Genre</h2>
-  <div class="row justify-content-center">
-    <div class="text-center" id="genre-links"></div>
+<div class="main-container">
+  <div class="wrapper">
+    <section id="section1">
+      <a href="#section3" class="arrow-btn">‹</a>
+      <div class="item">
+        <img src="images/Movie-Image-1.jpg" alt="Movie Image 1">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-2.jpg" alt="Movie Image 2">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-3.jpg" alt="Movie Image 3">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-4.jpg" alt="Movie Image 4">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-5.jpg" alt="Movie Image 5">
+      </div>
+      <a href="#section2" class="arrow-btn">›</a>
+    </section>
+    <section id="section2">
+      <a href="#section1" class="arrow-btn">‹</a>
+      <div class="item">
+        <img src="images/Movie-Image-6.jpg" alt="Movie Image 6">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-7.png" alt="Movie Image 7">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-8.png" alt="Movie Image 8">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-9.png" alt="Movie Image 9">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-10.jpg" alt="Movie Image 10">
+      </div>
+      <a href="#section3" class="arrow-btn">›</a>
+    </section>
+    <section id="section3">
+      <a href="#section2" class="arrow-btn">‹</a>
+      <div class="item">
+        <img src="images/Movie-Image-11.jpg" alt="Movie Image 11">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-12.jpg" alt="Movie Image 12">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-13.jpg" alt="Movie Image 13">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-14.jpg" alt="Movie Image 14">
+      </div>
+      <div class="item">
+        <img src="images/Movie-Image-15.jpg" alt="Movie Image 15">
+      </div>
+      <a href="#section1" class="arrow-btn">›</a>
+    </section>
   </div>
+  <div class="browse-container">
+    <h2>Browse by Movie Genre</h2>
+    <div class="row justify-content-center">
+      <div class="text-center" id="genre-links"></div>
+    </div>
 
-  <h2>Browse by Movie Title</h2>
-  <div class="title-row">
-    <p id="alpha-links"></p>
-  </div>
-  <div class="title-row">
-    <p id="numeric-links"></p>
+    <h2>Browse by Movie Title</h2>
+    <div class="title-row">
+      <p id="alpha-links"></p>
+    </div>
+    <div class="title-row">
+      <p id="numeric-links"></p>
+    </div>
   </div>
 </div>
 
