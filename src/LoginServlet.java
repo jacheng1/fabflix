@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT email, password FROM customers WHERE email = ?"; // define SQL query
+            String query = "SELECT email, password, id FROM customers WHERE email = ?"; // define SQL query
 
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
@@ -55,10 +55,10 @@ public class LoginServlet extends HttpServlet {
 
                 if (dbPassword.equals(password)) {
                     // password found
-
+                    String dbID = rs.getString("id");
                     // set this user on this session
                     request.getSession().setAttribute("user", new User(email));
-
+                    request.getSession().setAttribute("customerId", dbID);
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
                 }
