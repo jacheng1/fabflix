@@ -8,7 +8,8 @@
 ### Demonstration
 
 [Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
-[Project 2 Video Link](https://youtu.be/31G4-Dydruw)
+[Project 2 Video Link](https://youtu.be/31G4-Dydruw)\
+[Project 3 Video Link]()
 
 
 
@@ -21,6 +22,10 @@
 #### Project 2:
 ● Jacky: Login Page, Main Page, extend Movie List Page, extend Single Movie/Star Page, update jump functionality, Shopping Cart Page UI, Payment Page, Confirmation Page UI\
 ● Kristen: Shopping Cart Page functionality, Add-to-Cart feature on Movie List/Single Movie Page, Confirmation Page functionality, video demonstration
+
+#### Project 3:
+● Jacky: reCAPTCHA, PreparedStatement, enable verification based on email/password and encrypted password\
+● Kristen:
 
 
 
