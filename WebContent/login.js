@@ -36,10 +36,22 @@ function submitLoginForm(formSubmitEvent) {
 
     formSubmitEvent.preventDefault();
 
+    // retrieve reCAPTCHA response token
+    let recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        // if reCAPTCHA is not completed, show an error message
+        $("#login_error_message").text("Please complete the reCAPTCHA.");
+
+        return;
+    }
+
+    // construct form data
+    let formData = login_form.serialize() + "&g-recaptcha-response=" + recaptchaResponse;
+
     $.ajax(
       "api/login", {
           method: "POST",
-          data: login_form.serialize(),
+          data: formData,
           dataType: "text",
           success: handleLoginResult
         }

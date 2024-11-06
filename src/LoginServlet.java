@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
     private DataSource dataSource;
@@ -40,6 +42,8 @@ public class LoginServlet extends HttpServlet {
 
         JsonObject responseJsonObject = new JsonObject();
 
+        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT email, password, id FROM customers WHERE email = ?"; // define SQL query
 
@@ -51,16 +55,20 @@ public class LoginServlet extends HttpServlet {
             if (rs.next()) {
                 // email found
 
+                // retrieve encrypted password from moviedb
                 String dbPassword = rs.getString("password");
 
-                if (dbPassword.equals(password)) {
+                if (passwordEncryptor.checkPassword(password, dbPassword)) {
                     // password found
+
                     String dbID = rs.getString("id");
+
                     // set this user on this session
                     request.getSession().setAttribute("user", new User(email));
                     request.getSession().setAttribute("customerId", dbID);
+
                     responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "success");
+                    responseJsonObject.addProperty("message", "Login successful.");
                 }
                 else {
                     // password mismatch
