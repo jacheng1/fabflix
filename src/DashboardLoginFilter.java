@@ -1,5 +1,3 @@
-// derived from Project 2 Login Cart example: https://github.com/UCI-Chenli-teaching/cs122b-project2-login-cart-example/blob/main/src/LoginFilter.java
-
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,10 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Servlet Filter implementation class LoginFilter
+ * Servlet Filter implementation class DashboardLoginFilter
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = "/*")
-public class LoginFilter implements Filter {
+@WebFilter(filterName = "DashboardLoginFilter", urlPatterns = {"/_dashboard/*"})
+public class DashboardLoginFilter implements Filter {
     private final ArrayList<String> allowedURIs = new ArrayList<>();
 
     /**
@@ -21,7 +19,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        System.out.println("LoginFilter: " + httpRequest.getRequestURI());
+        System.out.println("DashboardLoginFilter: " + httpRequest.getRequestURI());
 
         // check if this URL is allowed to access without logging in
         if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
@@ -32,23 +30,21 @@ public class LoginFilter implements Filter {
         }
 
         // redirect to login page if the "user" attribute does not exist in session
-        if (httpRequest.getSession().getAttribute("user") == null) {
-            httpResponse.sendRedirect("login.html");
+        if (httpRequest.getSession().getAttribute("employee") == null) {
+            httpResponse.sendRedirect("/_dashboard_login.html");
         } else {
             chain.doFilter(request, response);
         }
     }
 
     private boolean isUrlAllowedWithoutLogin(String requestURI) {
-        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith) || requestURI.contains("_dashboard");
+        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
     }
 
     public void init(FilterConfig fConfig) {
+        allowedURIs.add("_dashboard_login.html");
+        allowedURIs.add("_dashboard_login.js");
         allowedURIs.add("api/dashboard_login");
-
-        allowedURIs.add("login.html");
-        allowedURIs.add("login.js");
-        allowedURIs.add("api/login");
     }
 
     public void destroy() {

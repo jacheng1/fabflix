@@ -25,8 +25,11 @@ function getParameterByName(target) {
 
 function handleMovieListResult(resultData) {
     let movieListTableBodyElement = jQuery("#movie_table_body");
+
     movieListTableBodyElement.empty();
+
     console.log("Iterating through movielist result");
+
     // iterate through resultData
     for (let i = 0; i < resultData.length; i++) {
         let rowHTML = "<tr class='item-row' data-movie-title=" + resultData[i]['movie_title'] + " data-movie-id='"+ resultData[i]['movie_id'] +"'>";
