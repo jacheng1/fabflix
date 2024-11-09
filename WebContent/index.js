@@ -263,11 +263,6 @@ document.addEventListener("DOMContentLoaded", function () {
         savePageState();
         fetchMovies();
     });
-
-
-
-
-
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -294,8 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("ERROR: " + error);
             }
         });
-
-        // clear input form
     }
 
     document.querySelector('#movie_table_body').addEventListener('click', (event) => {
@@ -306,9 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-
 
 function handleAddToCart (button) {
 
