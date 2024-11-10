@@ -56,7 +56,6 @@ public class AddStarServlet extends HttpServlet {
             ResultSet rs = conn.prepareStatement(idQuery).executeQuery();
             rs.next();
             String starID = rs.getString("starID");
-            rs.close();
 
             String insertQuery = "INSERT INTO stars (id, name, birthYear) VALUES (?, ?, ?)";
 
@@ -69,15 +68,19 @@ public class AddStarServlet extends HttpServlet {
                     statement.setNull(3, java.sql.Types.INTEGER);
                 }
 
+                // Execute INSERT statement on moviedb
                 int insertRows = statement.executeUpdate();
                 if (insertRows > 0) {
                     responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "Star added successfully.");
+                    responseJsonObject.addProperty("message", "Success! Star ID: " + starID);
                 } else {
                     responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "Failed to add star.");
                 }
 
+                responseJsonObject.addProperty("starID", rs.getString("starID"));
+
+                rs.close();
                 statement.close();
 
                 response.setStatus(200);
@@ -85,7 +88,6 @@ public class AddStarServlet extends HttpServlet {
         } catch (Exception e) {
             responseJsonObject.addProperty("status", "fail");
             responseJsonObject.addProperty("errorMessage", "Server error: " + e.getMessage());
-
 
             response.setStatus(500);
 

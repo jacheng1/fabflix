@@ -24,8 +24,8 @@
 ● Kristen: Shopping Cart Page functionality, Add-to-Cart feature on Movie List/Single Movie Page, Confirmation Page functionality, video demonstration
 
 #### Project 3:
-● Jacky: reCAPTCHA, PreparedStatement, enable verification based on email/password and encrypted password\
-● Kristen:
+● Jacky: reCAPTCHA, PreparedStatement, enable encrypted password verification, Metadata Page, Add Star Page, Add Movie Page, add_movie stored procedure\
+● Kristen: Add HTTPS, moviedb password encryption
 
 
 

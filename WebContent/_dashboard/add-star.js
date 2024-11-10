@@ -18,15 +18,19 @@ $(document).ready(function() {
                 birthYear: birthYear
             },
             dataType: 'json',
-            success: function(response) {
-                // If successful, show alert with success message and reset add_star_form input fields
-                if (response.status === "success") {
-                    alert(response.message);
+            success: (resultData) => {
+                const messageElement = $("#add_star_error_message");
+
+                // If successful, show success message and reset add_star_form input fields
+                if (resultData.status === "success") {
+                    messageElement.css("color", "green");
+                    messageElement.text(`Success! Star ID: ${resultData.starID}`);
 
                     $("#add_star_form")[0].reset();
                 } else {
-                    // If unsuccessful, show alert with error message
-                    $("#add_star_error_message").text(response.message);
+                    // If unsuccessful, show error message
+                    messageElement.css("color", "red");
+                    messageElement.text(resultData.message);
                 }
             },
             error: function(xhr, status, error) {
