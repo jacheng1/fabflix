@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Fabflix</title>
+    <style>
+        body {
+            background-color: #0d1116;
+        }
+
+        .custom-navbar {
+            background-color: #0f1a26;
+            color: white;
+        }
+
+        .custom-navbar .navbar-brand {
+            color: white;
+            margin-left: 70px;
+        }
+
+        .custom-navbar .home-button,
+        .custom-navbar .add-movie-button,
+        .custom-navbar .add-star-button {
+            color: #667183;
+            background-color: #0f1a26;
+            font-weight: bold;
+            border: none;
+            margin-right: 10px;
+        }
+
+        .custom-navbar .home-button:hover,
+        .custom-navbar .add-movie-button:hover,
+        .custom-navbar .add-star-button:hover {
+            color: white;
+            background-color: #1b2a39;
+        }
+
+        h1 {
+            color: white;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #metadata_table {
+            background-color: #0d1116;
+            color: white;
+        }
+
+        #metadata_table th, #metadata_table td {
+            border: 1px solid transparent;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #181b20;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #0d1116;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top custom-navbar">
+    <div>
+        <a class="navbar-brand" href="#">Fabflix</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button type="button" class="btn btn-primary home-button"
+                        onclick="
+                            var basePath = window.location.origin;
+
+                            if (basePath.includes('localhost')) {
+                                window.location.href = basePath + '/cs122b_project1_war/_dashboard/index.html';
+                            } else {
+                                window.location.href = basePath + '/cs122b-project1/_dashboard/index.html';
+                            }
+                ">
+                    Home
+                </button>
+            </li>
+            <li class="nav-item">
+                <button type="button" class="btn btn-primary add-movie-button"
+                        onclick="
+                          var basePath = window.location.origin;
+
+                          if (basePath.includes('localhost')) {
+                            window.location.href = basePath + '/cs122b_project1_war/_dashboard/add-movie.html';
+                          } else {
+                            window.location.href = basePath + '/cs122b-project1/_dashboard/add-movie.html';
+                          }
+                ">
+                    Add Movie
+                </button>
+            </li>
+            <li class="nav-item">
+                <button type="button" class="btn btn-primary add-star-button"
+                        onclick="
+                          var basePath = window.location.origin;
+
+                          if (basePath.includes('localhost')) {
+                            window.location.href = basePath + '/cs122b_project1_war/_dashboard/add-star.html';
+                          } else {
+                            window.location.href = basePath + '/cs122b-project1/_dashboard/add-star.html';
+                          }
+                ">
+                    Add Star
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<h1 class="mt-5">Metadata</h1>
+
+<table id=metadata_table class="table table-striped">
+    <tbody id=metadata_table_body></tbody>
+</table>
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Load index.js file -->
+<script src="index.js"></script>
+
+</body>
+</html>

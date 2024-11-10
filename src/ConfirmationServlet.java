@@ -60,18 +60,24 @@ public class ConfirmationServlet extends HttpServlet {
                     movieQuantity.put(item, 1);
                 }
             }
+
             ArrayList<String> moviesAddedToDB = new ArrayList<>();
+
             for (String previousItem : previousItems) {
                 PreparedStatement insertStatement = conn.prepareStatement(insertQuery);
+
                 if (!moviesAddedToDB.contains(previousItem)) {
                     moviesAddedToDB.add(previousItem);
+
                     insertStatement.setString(1, customerId);
                     insertStatement.setString(2, previousItem);
                     insertStatement.setString(3, String.valueOf(movieQuantity.get(previousItem)));
+
                     System.out.println("successfully got insert statement");
                     System.out.println(insertStatement.toString());
                     insertStatement.executeUpdate();
                     insertStatement.close();
+
                     System.out.println("successfully executed insert statement");
                     String selectQuery =
                             "SELECT sales.id, sales.customerId, sales.movieId, sales.saleDate, sales.quantity, movies.title, movies.price " +
@@ -83,6 +89,7 @@ public class ConfirmationServlet extends HttpServlet {
 
                     ResultSet rs = selectStatement.executeQuery();
                     System.out.println("successfully executed select statement");
+
                     while (rs.next()) {
                         String sale_id = rs.getString("id");
                         String movie_title = rs.getString("title");

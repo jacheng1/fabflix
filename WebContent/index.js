@@ -25,8 +25,11 @@ function getParameterByName(target) {
 
 function handleMovieListResult(resultData) {
     let movieListTableBodyElement = jQuery("#movie_table_body");
+
     movieListTableBodyElement.empty();
+
     console.log("Iterating through movielist result");
+
     // iterate through resultData
     for (let i = 0; i < resultData.length; i++) {
         let rowHTML = "<tr class='item-row' data-movie-title=" + resultData[i]['movie_title'] + " data-movie-id='"+ resultData[i]['movie_id'] +"'>";
@@ -260,11 +263,6 @@ document.addEventListener("DOMContentLoaded", function () {
         savePageState();
         fetchMovies();
     });
-
-
-
-
-
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -291,8 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("ERROR: " + error);
             }
         });
-
-        // clear input form
     }
 
     document.querySelector('#movie_table_body').addEventListener('click', (event) => {
@@ -303,9 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-
 
 function handleAddToCart (button) {
 

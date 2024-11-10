@@ -63,8 +63,8 @@ jQuery.ajax({
     method: "GET", // set request method to GET
     url: "api/single-movie?id=" + movieId, // set request URL as mapped by SingleMovieServlet
     success: (resultData) => handleSingleMovieResult(resultData) // set callback function to handle returned data from SingleMovieServlet
-
 });
+
 document.addEventListener('DOMContentLoaded', function ()
 {
     const addToCartButton = document.getElementById('add-to-cart-button');
@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function ()
                 console.error('ERROR: ', error);
             }
         });
-        // clear input form
     }
     addToCartButton.addEventListener('click', handleAddToCart)
 });

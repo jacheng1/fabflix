@@ -1,5 +1,3 @@
-// derived from Project 2 Login Cart example: https://github.com/UCI-Chenli-teaching/cs122b-project2-login-cart-example/blob/main/src/LoginServlet.java
-
 import com.google.gson.JsonObject;
 
 import javax.naming.InitialContext;
@@ -17,8 +15,8 @@ import java.sql.PreparedStatement;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "DashboardLoginServlet", urlPatterns = "/api/dashboard_login")
+public class DashboardLoginServlet extends HttpServlet {
     private DataSource dataSource;
 
     // servlet initialization
@@ -30,6 +28,9 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -42,7 +43,7 @@ public class LoginServlet extends HttpServlet {
         StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT email, password, id FROM customers WHERE email = ?"; // define SQL query
+            String query = "SELECT email, password FROM employees WHERE email = ?"; // define SQL query
 
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
@@ -58,11 +59,8 @@ public class LoginServlet extends HttpServlet {
                 if (passwordEncryptor.checkPassword(password, dbPassword)) {
                     // password found
 
-                    String dbID = rs.getString("id");
-
                     // set this user on this session
-                    request.getSession().setAttribute("user", new User(email));
-                    request.getSession().setAttribute("customerId", dbID);
+                    request.getSession().setAttribute("employee", email);
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "Login successful.");
