@@ -18,12 +18,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SAXCastParser extends DefaultHandler {
-
     List<StarinMovie> cast;
 
     private String tempVal;
     private boolean validStarInMovie;
-    //to maintain context
+    // to maintain context
     private StarinMovie tempStar;
 
     public SAXCastParser() {
@@ -39,11 +38,9 @@ public class SAXCastParser extends DefaultHandler {
     }
 
     private void parseDocument() {
-
         //get a factory
         SAXParserFactory spf = SAXParserFactory.newInstance();
         try {
-
             //get a new instance of parser
             SAXParser sp = spf.newSAXParser();
 
@@ -64,7 +61,6 @@ public class SAXCastParser extends DefaultHandler {
      * the contents
      */
     private void printData() {
-
         System.out.println("No of Cast members '" + cast.size() + "'.");
 
         Iterator<StarinMovie> it = cast.iterator();
@@ -88,15 +84,13 @@ public class SAXCastParser extends DefaultHandler {
         }
     }
 
-
-    //Event Handlers
+    // Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        //reset
+        // reset
         tempVal = "";
         if (qName.equalsIgnoreCase("m")) {
-            //create a new instance of employee
+            // create a new instance of employee
             tempStar = new StarinMovie();
-
         }
     }
 
@@ -107,32 +101,33 @@ public class SAXCastParser extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
             try {
                 if (qName.equalsIgnoreCase("f")) {
-                    //add it to the list
+                    // add it to the list
                     cast.add(tempStar);
                     validStarInMovie = true;
+
                     if (tempVal.isEmpty()) {
                         validStarInMovie = false;
                         throw new InvalidParameterException("Missing film id");
                     }
+
                     tempStar.setMovieId(tempVal);
                 } else if (qName.equalsIgnoreCase("a")) {
                     if (tempVal.isEmpty()) {
                         validStarInMovie = false;
                         throw new InvalidParameterException("Missing actor name");
                     }
+
                     tempStar.setName(tempVal);
                 } else if (qName.equalsIgnoreCase("t")) {
                     tempStar.setMovieTitle(tempVal);
                 }
-            }   catch (Exception e) {
+            } catch (Exception e) {
                 //
             }
-
     }
 
     public static void main(String[] args) {
         SAXCastParser spe = new SAXCastParser();
         spe.runExample();
     }
-
 }

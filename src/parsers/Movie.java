@@ -3,17 +3,11 @@ package parsers;
 import java.util.ArrayList;
 
 public class Movie{
-
     private String title;
-
     private int year;
-
     private String id;
-
     private String director;
     private ArrayList<String> genre;
-
-
 
     public Movie(){
         genre = new ArrayList<>();
@@ -25,7 +19,6 @@ public class Movie{
         this.id = id;
         this.director = director;
         this.genre = genre;
-
     }
 
     public Movie(String title, int year, String id, String director) {
@@ -40,7 +33,6 @@ public class Movie{
 
     public int getYear() {
         return year;
-
     }
 
     public void setYear(int year) {
@@ -67,7 +59,7 @@ public class Movie{
     public void setGenre(String genre) {
         try {
             this.genre.add(genre);
-        }   catch (Exception e) { System.out.println(e); }
+        } catch (Exception e) { System.out.println(e); }
     }
 
     public String toString() {
@@ -79,9 +71,6 @@ public class Movie{
         sb.append("Director: " + director);
         sb.append("Genre: " + genre);
 
-
         return sb.toString();
     }
-
-
 }

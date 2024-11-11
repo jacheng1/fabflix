@@ -39,6 +39,7 @@ public class FileParser {
         if (movie.getTitle() == null || movie.getTitle().isEmpty()) return false;
         if (movie.getYear() <= 0) return false;
         if (movie.getDirector() == null || movie.getDirector().isEmpty()) return false;
+
         return true;
     }
 }

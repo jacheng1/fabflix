@@ -12,7 +12,6 @@ public class LoadFromFile {
     private static final String USER = "mytestuser";
     private static final String PASSWORD = "My6$Password";
 
-
     public static void loadMoviedata() {
         String filePath = "src/parsers/movies.txt";
 
@@ -35,18 +34,18 @@ public class LoadFromFile {
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(loadTempTableSQL)) {
+             statement.execute("SET GLOBAL local_infile = 1");
+             statement.execute(createTempTableSQL);
+             statement.execute(loadTempTableSQL);
+             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
 
-            statement.execute("SET GLOBAL local_infile = 1");
-            statement.execute(createTempTableSQL);
-            statement.execute(loadTempTableSQL);
-
-            int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the main table.");
+             System.out.println("Inserted " + rowsInserted + " rows into the main table.");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public static void loadStarsdata(String filePath) {
         String createTempTableSQL = "CREATE TEMPORARY TABLE temp_stars (name VARCHAR(255), birthYear INT);";
         String loadTempTableSQL = "LOAD DATA LOCAL INFILE '" + filePath + "' " +
@@ -99,7 +98,6 @@ public class LoadFromFile {
                 "    FROM movies m " +
                 "    WHERE m.id = temp.movieId);";
 
-
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 
@@ -113,5 +111,4 @@ public class LoadFromFile {
             e.printStackTrace();
         }
     }
-
 }

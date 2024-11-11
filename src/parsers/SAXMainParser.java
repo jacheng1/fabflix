@@ -27,12 +27,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SAXMainParser extends DefaultHandler {
-
     List<Movie> movies;
 
     private String tempVal;
     private boolean validMovie;
-    //to maintain context
+    // to maintain context
     private Movie tempMov;
     private int inconsistencies;
     int duplicateMovies = 0;
@@ -44,25 +43,24 @@ public class SAXMainParser extends DefaultHandler {
 
     public void runExample() {
         parseDocument();
-        //printData();
+        // printData();
         writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
-        //db.insertMovies(movies);
+        // db.insertMovies(movies);
         System.out.println("Inserted " + movies.size() + " movies");
-        //db.insertGenres(movies);
-       // db.printInconsistencies();
+        // db.insertGenres(movies);
+        // db.printInconsistencies();
     }
 
     private void parseDocument() {
 
-        //get a factory
+        // get a factory
         SAXParserFactory spf = SAXParserFactory.newInstance();
         try {
-
-            //get a new instance of parser
+            // get a new instance of parser
             SAXParser sp = spf.newSAXParser();
 
-            //parse the file and also register this class for call backs
+            // parse the file and also register this class for call backs
             sp.parse("mains243.xml", this);
 
         } catch (SAXException se) {
@@ -94,15 +92,17 @@ public class SAXMainParser extends DefaultHandler {
                 writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
             }
             System.out.println("Movies written to " + fileName);
+
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
-        }try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/parsers/genres-in-movies.txt"))) {
+        } try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/parsers/genres-in-movies.txt"))) {
             for (Movie movie : movies) {
                 for (String genre : movie.getGenre()) {
                     writer.write(movie.getId() + "\t" + genre + "\n");
                 }
             }
             System.out.println("Movies written to " + "src/parsers/genres-in-movies.txt");
+
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
@@ -110,19 +110,18 @@ public class SAXMainParser extends DefaultHandler {
 
 
 
-    //Event Handlers
+    // Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        //reset
+        // reset
         tempVal = "";
 
         if (qName.equalsIgnoreCase("dirname")) {
             tempDir = attributes.getValue("dirname");
         }
         if (qName.equalsIgnoreCase("film")) {
-            //create a new instance of employee
+            // create a new instance of employee
             tempMov = new Movie();
             tempMov.setDirector(tempDir);
-
         }
     }
 
@@ -135,6 +134,7 @@ public class SAXMainParser extends DefaultHandler {
             if (qName.equalsIgnoreCase("film")) {
                 //add it to the list
                 validMovie = true;
+
                 movies.add(tempMov);
 
             } else if (qName.equalsIgnoreCase("t") && validMovie) {
@@ -142,21 +142,25 @@ public class SAXMainParser extends DefaultHandler {
                     validMovie = false;
                     throw new InvalidParameterException("Missing title");
                 }
+
                 tempMov.setTitle(tempVal);
             } else if (qName.equalsIgnoreCase("fid") && validMovie) {
                 if (tempVal.isEmpty()) {
                     validMovie = false;
+
                     throw new InvalidParameterException("Missing title");
                 }
+
                 tempMov.setId(tempVal);
             } else if (qName.equalsIgnoreCase("year") && validMovie) {
 
                 if (tempVal.isEmpty()) {
                     validMovie = false;
+
                     throw new InvalidParameterException("Missing title");
                 }
-                tempMov.setYear(Integer.parseInt(tempVal));
 
+                tempMov.setYear(Integer.parseInt(tempVal));
             } else if (qName.equalsIgnoreCase("cat") && validMovie) {
                 tempMov.setGenre(tempVal);
             } else if (qName.equalsIgnoreCase("dirn") && validMovie) {
@@ -164,6 +168,7 @@ public class SAXMainParser extends DefaultHandler {
                     validMovie = false;
                     throw new InvalidParameterException("Missing title");
                 }
+
                 tempMov.setDirector(tempVal);
             }
             else if (qName.equalsIgnoreCase("/film") && !validMovie && isUnique(tempMov, movies)) {
@@ -174,22 +179,24 @@ public class SAXMainParser extends DefaultHandler {
         }
 
     }
+
     public  boolean isUnique(Movie m, List<Movie> movies) {
         for (Movie m1 : movies) {
             if (m1.getId().equals(m.getId())) {
                 duplicateMovies++;
+
                 return false;
             }
         }
         return true;
     }
+
     public int getDuplicateMovies() {
         return duplicateMovies;
     }
+
     public static void main(String[] args) {
         SAXMainParser spe = new SAXMainParser();
         spe.runExample();
     }
-
 }
-

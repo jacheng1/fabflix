@@ -11,6 +11,7 @@ public class UpdateDatabase {
     private static final String URL = "jdbc:mysql://localhost:3306/moviedb";
     private static final String USER = "mytestuser";
     private static final String PASSWORD = "My6$Password";
+
     private int starsAdded = 0;
     private int duplicateStars = 0;
     private int inconsistencies = 0;
@@ -39,13 +40,13 @@ public class UpdateDatabase {
         System.out.println(starsNotFound + " stars not found");
     }
 */
-   // private ArrayList<String> inconsistencies;
+    // private ArrayList<String> inconsistencies;
     public void insertStarsInMovies(List<StarinMovie> starmovielist) {
        String insertStarsInMoviesSQL = "INSERT INTO stars_in_movies (starId, movieId) " +
                "SELECT s.id, ? FROM stars s where s.name = ? and not exists (" +
                "SELECT 1 FROM stars_in_movies sim WHERE sim.starId = s.id and sim.movieId = ?)";
 
-        try {
+       try {
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(insertStarsInMoviesSQL);
 
@@ -59,15 +60,15 @@ public class UpdateDatabase {
                 }   catch (java.sql.SQLIntegrityConstraintViolationException sq) {
                     System.out.println(sq.getMessage());
                 }   catch (SQLException e) {
-                    //inconsistencies.add(e);
+                    // inconsistencies.add(e);
                     System.out.println(e);
                 }
             }
             System.out.println("Inserted " + starsAdded +  " stars.");
 
-        } catch (SQLException e) {
+       } catch (SQLException e) {
             System.out.println("Error inserting stars: " + e.getMessage());
-        }
+       }
 
     }
     public void insertStars(List<Star> starlist) {
@@ -88,13 +89,13 @@ public class UpdateDatabase {
                     preparedStatement.setString(3, star.getName());
                     preparedStatement.executeUpdate();
                     starsAdded++;
-                }   catch (java.sql.SQLIntegrityConstraintViolationException sq) {
+                } catch (java.sql.SQLIntegrityConstraintViolationException sq) {
                     duplicateStars++;
-                }   catch (SQLException e) {
-                    //inconsistencies.add(e);
+                } catch (SQLException e) {
+                    // inconsistencies.add(e);
                     System.out.println(e);
-                }   catch (Exception e) {
-                    //System.out.println(e);
+                } catch (Exception e) {
+                    // System.out.println(e);
                 }
             }
             System.out.println("Inserted " + starsAdded +  " stars.");
@@ -102,7 +103,6 @@ public class UpdateDatabase {
         } catch (SQLException e) {
             System.out.println("Error inserting stars: " + e.getMessage());
         }
-
     }
 
     public void insertGenres(List<Movie> movies) {
@@ -115,15 +115,16 @@ public class UpdateDatabase {
             for (Movie movie : movies) {
                 try {
                     ArrayList<String> genres = movie.getGenre();
+
                     for (String genre : genres) {
                         preparedStatement.setString(1, genre);
                         preparedStatement.setString(2, genre);
                         preparedStatement.executeUpdate();
                     }
-                }   catch (java.sql.SQLIntegrityConstraintViolationException e) {
+                } catch (java.sql.SQLIntegrityConstraintViolationException e) {
                     if (e.getMessage().contains("Duplicate entry")) {
                         duplicateMovies++;
-                    }   else if (e.getMessage().contains("cannot be null")) {
+                    } else if (e.getMessage().contains("cannot be null")) {
                         inconsistencies++;
                     }
                     System.out.println(e);
@@ -134,12 +135,11 @@ public class UpdateDatabase {
         } catch (SQLException e) {
             System.out.println("Error inserting movies: " + e.getMessage());
         }
-
     }
+
     public void insertMovies(List<Movie> movies) {
         String insertMovieSQL = "INSERT INTO movies (id, title, year, director)" +
         "SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM movies WHERE id = ? OR (title = ? and year = ? and director = ?))";
-
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(insertMovieSQL)) {
@@ -149,6 +149,7 @@ public class UpdateDatabase {
                     if (movie.getId().isEmpty() || movie.getTitle().isEmpty() || movie.getDirector().isEmpty() || movie.getYear() == 0) {
                         throw new InvalidParameterException("Missing values");
                     }
+
                     preparedStatement.setString(1, movie.getId());
                     preparedStatement.setString(2, movie.getTitle());
                     preparedStatement.setInt(3, movie.getYear());
@@ -158,14 +159,17 @@ public class UpdateDatabase {
                     preparedStatement.setInt(7, movie.getYear());
                     preparedStatement.setString(8, movie.getDirector());
                     preparedStatement.executeUpdate();
+
                     moviesAdded++;
-                }   catch (java.sql.SQLIntegrityConstraintViolationException e) {
+                } catch (java.sql.SQLIntegrityConstraintViolationException e) {
                     if (e.getMessage().contains("Duplicate entry")) {
                         duplicateMovies++;
-                    }   else if (e.getMessage().contains("cannot be null")) {
+                    } else if (e.getMessage().contains("cannot be null")) {
                         inconsistencies++;
                     }
+
                     System.out.println(e);
+
                 }   catch (Exception eq) {
                     inconsistencies++;
                 }
