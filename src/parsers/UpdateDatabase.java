@@ -94,7 +94,7 @@ public class UpdateDatabase {
                     //inconsistencies.add(e);
                     System.out.println(e);
                 }   catch (Exception e) {
-                    System.out.println(e);
+                    //System.out.println(e);
                 }
             }
             System.out.println("Inserted " + starsAdded +  " stars.");

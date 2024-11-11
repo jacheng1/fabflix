@@ -33,9 +33,9 @@ public class SAXCastParser extends DefaultHandler {
     public void runExample() {
         parseDocument();
         printData();
-        writeStarsInMoviesToFile(cast, "cast");
+        writeStarsInMoviesToFile(cast, "src/parsers/cast.txt");
         UpdateDatabase db = new UpdateDatabase();
-        db.insertStarsInMovies(cast);
+        //db.insertStarsInMovies(cast);
     }
 
     private void parseDocument() {
@@ -105,26 +105,28 @@ public class SAXCastParser extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-
-            if (qName.equalsIgnoreCase("f")) {
-                //add it to the list
-                cast.add(tempStar);
-                validStarInMovie = true;
-                if (tempVal.isEmpty()) {
-                    validStarInMovie = false;
-                    throw new InvalidParameterException("Missing film id");
+            try {
+                if (qName.equalsIgnoreCase("f")) {
+                    //add it to the list
+                    cast.add(tempStar);
+                    validStarInMovie = true;
+                    if (tempVal.isEmpty()) {
+                        validStarInMovie = false;
+                        throw new InvalidParameterException("Missing film id");
+                    }
+                    tempStar.setMovieId(tempVal);
+                } else if (qName.equalsIgnoreCase("a")) {
+                    if (tempVal.isEmpty()) {
+                        validStarInMovie = false;
+                        throw new InvalidParameterException("Missing actor name");
+                    }
+                    tempStar.setName(tempVal);
+                } else if (qName.equalsIgnoreCase("t")) {
+                    tempStar.setMovieTitle(tempVal);
                 }
-                tempStar.setMovieId(tempVal);
-            } else if (qName.equalsIgnoreCase("a")) {
-                if (tempVal.isEmpty()) {
-                    validStarInMovie = false;
-                    throw new InvalidParameterException("Missing actor name");
-                }
-                tempStar.setName(tempVal);
-            } else if (qName.equalsIgnoreCase("t")) {
-                tempStar.setMovieTitle(tempVal);
+            }   catch (Exception e) {
+                //
             }
-
 
     }
 

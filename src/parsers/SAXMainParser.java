@@ -35,6 +35,7 @@ public class SAXMainParser extends DefaultHandler {
     //to maintain context
     private Movie tempMov;
     private int inconsistencies;
+    int duplicateMovies = 0;
 
     public SAXMainParser() {
         movies = new ArrayList<Movie>();
@@ -43,11 +44,11 @@ public class SAXMainParser extends DefaultHandler {
     public void runExample() {
         parseDocument();
         printData();
-        writeMoviesToFile(movies, "movies");
+        writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
-        db.insertMovies(movies);
+        //db.insertMovies(movies);
         System.out.println("Inserted " + movies.size() + " movies");
-        db.insertGenres(movies);
+        //db.insertGenres(movies);
        // db.printInconsistencies();
     }
 
@@ -90,12 +91,17 @@ public class SAXMainParser extends DefaultHandler {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Movie movie : movies) {
                 writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
+            }
+            System.out.println("Movies written to " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e.getMessage());
+        }try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/parsers/genres-in-movies.txt"))) {
+            for (Movie movie : movies) {
                 for (String genre : movie.getGenre()) {
                     writer.write(movie.getId() + "\t" + genre + "\n");
                 }
-
             }
-            System.out.println("Movies written to " + fileName);
+            System.out.println("Movies written to " + "src/parsers/genres-in-movies.txt");
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
@@ -162,7 +168,7 @@ public class SAXMainParser extends DefaultHandler {
         }
 
     }
-    public static boolean isUnique(Movie m, List<Movie> movies) {
+    public  boolean isUnique(Movie m, List<Movie> movies) {
         for (Movie m1 : movies) {
             if (m1.getId().equals(m.getId())) {
                 duplicateMovies++;

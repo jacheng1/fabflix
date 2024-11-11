@@ -22,7 +22,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class SAXActorParser extends DefaultHandler {
 
     List<Star> stars;
-
+    private int starsDuplicate= 0;
     private String tempVal;
     private boolean validStar;
     //to maintain context
@@ -35,9 +35,11 @@ public class SAXActorParser extends DefaultHandler {
     public void runExample() {
         parseDocument();
         printData();
-        writeActorsToFile(stars, "stars");
+        writeActorsToFile(stars, "src/parsers/stars.txt");
         UpdateDatabase db = new UpdateDatabase();
-        db.insertStars(stars);
+        //db.insertStars(stars);
+        System.out.println("Inserted "+ stars.size() + " stars");
+        System.out.println(starsDuplicate + " stars duplicate");
     }
 
     private void parseDocument() {
@@ -115,11 +117,16 @@ public class SAXActorParser extends DefaultHandler {
 
                 tempStar.setName(tempVal);
             } else if (qName.equalsIgnoreCase("dob")) {
-                if (tempVal.isEmpty()) {
+                if (tempVal.isEmpty() || tempVal.equals("n.a")) {
                     validStar = false;
                     throw new InvalidParameterException("Missing DOB");
                 }
-                tempStar.setDOB(Integer.parseInt(tempVal));
+                try {
+                    tempStar.setDOB(Integer.parseInt(tempVal));
+                }   catch (Exception e) {
+                    validStar = false;
+                    throw new InvalidParameterException("Invalid DOB");
+                }
 
             }   else if (qName.equalsIgnoreCase("/actor") && !validStar) {
                 stars.remove(tempStar);
@@ -130,9 +137,10 @@ public class SAXActorParser extends DefaultHandler {
         }
     }
 
-    public static boolean isUnique(Star s, List<Star> stars) {
+    public  boolean isUnique(Star s, List<Star> stars) {
         for (Star s1 : stars) {
             if (s1.getName().equals(s.getName())) {
+                starsDuplicate++;
                 return false;
             }
         }
