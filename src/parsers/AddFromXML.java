@@ -10,7 +10,8 @@ public class AddFromXML {
         sme.runExample();
 
         LoadFromFile lf = new LoadFromFile();
-        lf.loadMoviedata();
-        lf.loadStarsdata("/src/parsers/stars.txt");
+        //lf.loadMoviedata();
+        //lf.loadStarsdata("src/parsers/stars.txt");
+        lf.loadCast("src/parsers/cast.txt");
     }
 }

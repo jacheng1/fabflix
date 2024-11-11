@@ -34,7 +34,7 @@ public class SAXActorParser extends DefaultHandler {
 
     public void runExample() {
         parseDocument();
-        printData();
+        //printData();
         writeActorsToFile(stars, "src/parsers/stars.txt");
         UpdateDatabase db = new UpdateDatabase();
         //db.insertStars(stars);
@@ -96,7 +96,7 @@ public class SAXActorParser extends DefaultHandler {
         if (qName.equalsIgnoreCase("actor")) {
             //create a new instance of employee
             tempStar = new Star();
-
+            validStar = true;
         }
     }
 
@@ -108,8 +108,7 @@ public class SAXActorParser extends DefaultHandler {
         try {
             if (qName.equalsIgnoreCase("stagename")) {
                 //add it to the list
-                validStar = true;
-                stars.add(tempStar);
+
                 if (tempVal.isEmpty()) {
                     validStar = false;
                     throw new InvalidParameterException("Missing name");
@@ -117,22 +116,20 @@ public class SAXActorParser extends DefaultHandler {
 
                 tempStar.setName(tempVal);
             } else if (qName.equalsIgnoreCase("dob")) {
-                if (tempVal.isEmpty() || tempVal.equals("n.a")) {
-                    validStar = false;
-                    throw new InvalidParameterException("Missing DOB");
-                }
                 try {
+                    int dob = Integer.parseInt(tempVal);
+                    if (dob == 0) throw new InvalidParameterException("Invalid dob");
                     tempStar.setDOB(Integer.parseInt(tempVal));
                 }   catch (Exception e) {
                     validStar = false;
                     throw new InvalidParameterException("Invalid DOB");
                 }
 
-            }   else if (qName.equalsIgnoreCase("/actor") && !validStar) {
-                stars.remove(tempStar);
-            }
-
-        }   catch (InvalidParameterException e) {
+            } else if (qName.equalsIgnoreCase("actor")) {
+                if (validStar && isUnique(tempStar, stars)) {
+                    stars.add(tempStar);
+                }
+        } }  catch (InvalidParameterException e) {
             //
         }
     }

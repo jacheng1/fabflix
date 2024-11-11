@@ -32,7 +32,7 @@ public class SAXCastParser extends DefaultHandler {
 
     public void runExample() {
         parseDocument();
-        printData();
+        //printData();
         writeStarsInMoviesToFile(cast, "src/parsers/cast.txt");
         UpdateDatabase db = new UpdateDatabase();
         //db.insertStarsInMovies(cast);
@@ -80,7 +80,7 @@ public class SAXCastParser extends DefaultHandler {
     public static void writeStarsInMoviesToFile(List<StarinMovie> starsinmovies, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (StarinMovie starinmovie : starsinmovies) {
-                writer.write(starinmovie.getName() + "\t" + starinmovie.getMovieTitle() + "\t" + starinmovie.getMovieId() +"\n");
+                writer.write(starinmovie.getName() + "\t" + starinmovie.getMovieId() +"\n");
             }
             System.out.println("Actors written to " + fileName);
         } catch (IOException e) {

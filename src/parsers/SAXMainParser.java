@@ -36,6 +36,7 @@ public class SAXMainParser extends DefaultHandler {
     private Movie tempMov;
     private int inconsistencies;
     int duplicateMovies = 0;
+    private String tempDir;
 
     public SAXMainParser() {
         movies = new ArrayList<Movie>();
@@ -43,7 +44,7 @@ public class SAXMainParser extends DefaultHandler {
 
     public void runExample() {
         parseDocument();
-        printData();
+        //printData();
         writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
         //db.insertMovies(movies);
@@ -113,9 +114,14 @@ public class SAXMainParser extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         //reset
         tempVal = "";
+
+        if (qName.equalsIgnoreCase("dirname")) {
+            tempDir = attributes.getValue("dirname");
+        }
         if (qName.equalsIgnoreCase("film")) {
             //create a new instance of employee
             tempMov = new Movie();
+            tempMov.setDirector(tempDir);
 
         }
     }
