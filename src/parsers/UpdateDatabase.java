@@ -22,8 +22,9 @@ public class UpdateDatabase {
     private int moviesNotFound = 0;
     private int starsNotFound = 0;
     private int moviesNoStars = 0;
-
+/*
     public void printInconsistencies() {
+
         System.out.println("Inserted " + starsAdded);
         System.out.println("Inserted " + genresAdded);
         System.out.println("Inserted " + moviesAdded);
@@ -37,7 +38,7 @@ public class UpdateDatabase {
         System.out.println(duplicateStars + " stars duplicate");
         System.out.println(starsNotFound + " stars not found");
     }
-
+*/
    // private ArrayList<String> inconsistencies;
     public void insertStarsInMovies(List<StarinMovie> starmovielist) {
        String insertStarsInMoviesSQL = "INSERT INTO stars_in_movies (starId, movieId) " +
@@ -157,6 +158,7 @@ public class UpdateDatabase {
                     preparedStatement.setInt(7, movie.getYear());
                     preparedStatement.setString(8, movie.getDirector());
                     preparedStatement.executeUpdate();
+                    moviesAdded++;
                 }   catch (java.sql.SQLIntegrityConstraintViolationException e) {
                     if (e.getMessage().contains("Duplicate entry")) {
                         duplicateMovies++;

@@ -27,6 +27,10 @@ public class Movie{
         this.genre = genre;
 
     }
+
+    public Movie(String title, int year, String id, String director) {
+    }
+
     public String getTitle() {
         return title;
     }
@@ -78,4 +82,6 @@ public class Movie{
 
         return sb.toString();
     }
+
+
 }

@@ -1,12 +1,11 @@
 package parsers;
 
 import java.io.*;
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import java.io.IOException;
 
@@ -32,9 +31,10 @@ public class SAXMainParser extends DefaultHandler {
     List<Movie> movies;
 
     private String tempVal;
-
+    private boolean validMovie;
     //to maintain context
     private Movie tempMov;
+    private int inconsistencies;
 
     public SAXMainParser() {
         movies = new ArrayList<Movie>();
@@ -46,8 +46,9 @@ public class SAXMainParser extends DefaultHandler {
         writeMoviesToFile(movies, "movies");
         UpdateDatabase db = new UpdateDatabase();
         db.insertMovies(movies);
+        System.out.println("Inserted " + movies.size() + " movies");
         db.insertGenres(movies);
-        db.printInconsistencies();
+       // db.printInconsistencies();
     }
 
     private void parseDocument() {
@@ -92,6 +93,7 @@ public class SAXMainParser extends DefaultHandler {
                 for (String genre : movie.getGenre()) {
                     writer.write(movie.getId() + "\t" + genre + "\n");
                 }
+
             }
             System.out.println("Movies written to " + fileName);
         } catch (IOException e) {
@@ -117,31 +119,61 @@ public class SAXMainParser extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        try {
+            if (qName.equalsIgnoreCase("film")) {
+                //add it to the list
+                validMovie = true;
+                movies.add(tempMov);
 
-        if (qName.equalsIgnoreCase("film")) {
-            //add it to the list
-            movies.add(tempMov);
+            } else if (qName.equalsIgnoreCase("t") && validMovie) {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing title");
+                }
+                tempMov.setTitle(tempVal);
+            } else if (qName.equalsIgnoreCase("fid") && validMovie) {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing title");
+                }
+                tempMov.setId(tempVal);
+            } else if (qName.equalsIgnoreCase("year") && validMovie) {
 
-        } else if (qName.equalsIgnoreCase("t")) {
-            tempMov.setTitle(tempVal);
-        } else if (qName.equalsIgnoreCase("fid")) {
-            tempMov.setId(tempVal);
-        } else if (qName.equalsIgnoreCase("year")) {
-            try {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing title");
+                }
                 tempMov.setYear(Integer.parseInt(tempVal));
-            }   catch (Exception e) {
-                System.out.println(e);
+
+            } else if (qName.equalsIgnoreCase("cat") && validMovie) {
+                tempMov.setGenre(tempVal);
+            } else if (qName.equalsIgnoreCase("dirn") && validMovie) {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing title");
+                }
+                tempMov.setDirector(tempVal);
             }
-        }
-        else if (qName.equalsIgnoreCase("cat")) {
-            tempMov.setGenre(tempVal);
-        }
-        else if (qName.equalsIgnoreCase("dirn")) {
-            tempMov.setDirector(tempVal);
+            else if (qName.equalsIgnoreCase("/film") && !validMovie && isUnique(tempMov, movies)) {
+                movies.remove(tempMov);
+            }
+        }   catch (Exception e) {
+            //
         }
 
     }
-
+    public static boolean isUnique(Movie m, List<Movie> movies) {
+        for (Movie m1 : movies) {
+            if (m1.getId().equals(m.getId())) {
+                duplicateMovies++;
+                return false;
+            }
+        }
+        return true;
+    }
+    public int getDuplicateMovies() {
+        return duplicateMovies;
+    }
     public static void main(String[] args) {
         SAXMainParser spe = new SAXMainParser();
         spe.runExample();

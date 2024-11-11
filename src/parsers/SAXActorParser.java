@@ -1,6 +1,7 @@
 package parsers;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,7 @@ public class SAXActorParser extends DefaultHandler {
     List<Star> stars;
 
     private String tempVal;
-
+    private boolean validStar;
     //to maintain context
     private Star tempStar;
 
@@ -102,25 +103,46 @@ public class SAXActorParser extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        try {
+            if (qName.equalsIgnoreCase("stagename")) {
+                //add it to the list
+                validStar = true;
+                stars.add(tempStar);
+                if (tempVal.isEmpty()) {
+                    validStar = false;
+                    throw new InvalidParameterException("Missing name");
+                }
 
-        if (qName.equalsIgnoreCase("stagename")) {
-            //add it to the list
-            stars.add(tempStar);
-            tempStar.setName(tempVal);
-        } else if (qName.equalsIgnoreCase("dob")) {
-            try {
+                tempStar.setName(tempVal);
+            } else if (qName.equalsIgnoreCase("dob")) {
+                if (tempVal.isEmpty()) {
+                    validStar = false;
+                    throw new InvalidParameterException("Missing DOB");
+                }
                 tempStar.setDOB(Integer.parseInt(tempVal));
-            }   catch (Exception e) {
-                System.out.println(e);
+
+            }   else if (qName.equalsIgnoreCase("/actor") && !validStar) {
+                stars.remove(tempStar);
             }
+
+        }   catch (InvalidParameterException e) {
+            //
         }
-
-
     }
 
+    public static boolean isUnique(Star s, List<Star> stars) {
+        for (Star s1 : stars) {
+            if (s1.getName().equals(s.getName())) {
+                return false;
+            }
+        }
+        return true;
+    }
     public static void main(String[] args) {
         SAXActorParser spe = new SAXActorParser();
         spe.runExample();
     }
+
+
 
 }

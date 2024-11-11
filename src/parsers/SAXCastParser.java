@@ -3,6 +3,7 @@ package parsers;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SAXCastParser extends DefaultHandler {
     List<StarinMovie> cast;
 
     private String tempVal;
-
+    private boolean validStarInMovie;
     //to maintain context
     private StarinMovie tempStar;
 
@@ -108,8 +109,17 @@ public class SAXCastParser extends DefaultHandler {
             if (qName.equalsIgnoreCase("f")) {
                 //add it to the list
                 cast.add(tempStar);
+                validStarInMovie = true;
+                if (tempVal.isEmpty()) {
+                    validStarInMovie = false;
+                    throw new InvalidParameterException("Missing film id");
+                }
                 tempStar.setMovieId(tempVal);
             } else if (qName.equalsIgnoreCase("a")) {
+                if (tempVal.isEmpty()) {
+                    validStarInMovie = false;
+                    throw new InvalidParameterException("Missing actor name");
+                }
                 tempStar.setName(tempVal);
             } else if (qName.equalsIgnoreCase("t")) {
                 tempStar.setMovieTitle(tempVal);
