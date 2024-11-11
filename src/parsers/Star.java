@@ -1,3 +1,5 @@
+package parsers;
+
 import java.util.ArrayList;
 
 public class Star{

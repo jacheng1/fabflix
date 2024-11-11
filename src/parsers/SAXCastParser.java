@@ -1,4 +1,7 @@
+package parsers;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +32,7 @@ public class SAXCastParser extends DefaultHandler {
     public void runExample() {
         parseDocument();
         printData();
+        writeStarsInMoviesToFile(cast, "cast");
     }
 
     private void parseDocument() {
@@ -58,13 +62,29 @@ public class SAXCastParser extends DefaultHandler {
      */
     private void printData() {
 
-        System.out.println("No of Employees '" + cast.size() + "'.");
+        System.out.println("No of Cast members '" + cast.size() + "'.");
 
         Iterator<StarinMovie> it = cast.iterator();
         while (it.hasNext()) {
-            System.out.println(it.next().toString());
+            try {
+                System.out.println(it.next().toString());
+            }   catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
+
+    public static void writeStarsInMoviesToFile(List<StarinMovie> starsinmovies, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (StarinMovie starinmovie : starsinmovies) {
+                writer.write(starinmovie.getName() + "\t" + starinmovie.getMovieTitle() + "\t" + starinmovie.getMovieId() +"\n");
+            }
+            System.out.println("Actors written to " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e.getMessage());
+        }
+    }
+
 
     //Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -83,15 +103,16 @@ public class SAXCastParser extends DefaultHandler {
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
-        if (qName.equalsIgnoreCase("f")) {
-            //add it to the list
-            cast.add(tempStar);
-            tempStar.setMovieId(tempVal);
-        } else if (qName.equalsIgnoreCase("a")) {
-            tempStar.setName(tempVal);
-        } else if (qName.equalsIgnoreCase("t")) {
-            tempStar.setMovieTitle(tempVal);
-        }
+            if (qName.equalsIgnoreCase("f")) {
+                //add it to the list
+                cast.add(tempStar);
+                tempStar.setMovieId(tempVal);
+            } else if (qName.equalsIgnoreCase("a")) {
+                tempStar.setName(tempVal);
+            } else if (qName.equalsIgnoreCase("t")) {
+                tempStar.setMovieTitle(tempVal);
+            }
+
 
     }
 

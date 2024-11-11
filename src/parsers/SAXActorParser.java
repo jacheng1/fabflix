@@ -1,8 +1,13 @@
+package parsers;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -29,6 +34,7 @@ public class SAXActorParser extends DefaultHandler {
     public void runExample() {
         parseDocument();
         printData();
+        writeActorsToFile(stars, "stars");
     }
 
     private void parseDocument() {
@@ -65,6 +71,18 @@ public class SAXActorParser extends DefaultHandler {
             System.out.println(it.next().toString());
         }
     }
+
+    public static void writeActorsToFile(List<Star> stars, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Star star : stars) {
+                writer.write(star.getName() + "\t" + star.getDOB() + "\n");
+            }
+            System.out.println("Actors written to " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e.getMessage());
+        }
+    }
+
 
     //Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

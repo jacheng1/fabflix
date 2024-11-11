@@ -1,3 +1,5 @@
+package parsers;
+
 import java.util.ArrayList;
 
 public class StarinMovie {
@@ -13,22 +15,12 @@ public class StarinMovie {
     public StarinMovie(){
     }
 
-    public StarinMovie(String name, String id, String movieId, String movieTitle) {
+    public StarinMovie(String name, String movieId, String movieTitle) {
         this.name = name;
-        this.id = id;
-
         this.movieId = movieId;
         this.movieTitle = movieTitle;
     }
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
