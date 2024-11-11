@@ -82,6 +82,8 @@
 
                             if (basePath.includes('localhost')) {
                                 window.location.href = basePath + '/cs122b_project1_war/_dashboard/index.html';
+                            } else if (basePath.includes('fab-flix.com')) {
+                                window.location.href = basePath + '/_dashboard/index.html';
                             } else {
                                 window.location.href = basePath + '/cs122b-project1/_dashboard/index.html';
                             }
@@ -96,6 +98,8 @@
 
                           if (basePath.includes('localhost')) {
                             window.location.href = basePath + '/cs122b_project1_war/_dashboard/add-movie.html';
+                          } else if (basePath.includes('fab-flix.com')) {
+                            window.location.href = basePath + '/_dashboard/add-movie.html';
                           } else {
                             window.location.href = basePath + '/cs122b-project1/_dashboard/add-movie.html';
                           }
@@ -110,6 +114,8 @@
 
                           if (basePath.includes('localhost')) {
                             window.location.href = basePath + '/cs122b_project1_war/_dashboard/add-star.html';
+                          } else if (basePath.includes('fab-flix.com')) {
+                            window.location.href = basePath + '/_dashboard/add-star.html';
                           } else {
                             window.location.href = basePath + '/cs122b-project1/_dashboard/add-star.html';
                           }
