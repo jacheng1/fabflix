@@ -1,18 +1,27 @@
 package parsers;
 
-import java.io.IOException;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -35,7 +44,10 @@ public class SAXMainParser extends DefaultHandler {
         parseDocument();
         printData();
         writeMoviesToFile(movies, "movies");
-
+        UpdateDatabase db = new UpdateDatabase();
+        db.insertMovies(movies);
+        db.insertGenres(movies);
+        db.printInconsistencies();
     }
 
     private void parseDocument() {
@@ -87,6 +99,8 @@ public class SAXMainParser extends DefaultHandler {
         }
     }
 
+
+
     //Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         //reset
@@ -134,3 +148,4 @@ public class SAXMainParser extends DefaultHandler {
     }
 
 }
+

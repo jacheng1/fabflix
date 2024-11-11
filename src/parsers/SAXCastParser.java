@@ -33,6 +33,8 @@ public class SAXCastParser extends DefaultHandler {
         parseDocument();
         printData();
         writeStarsInMoviesToFile(cast, "cast");
+        UpdateDatabase db = new UpdateDatabase();
+        db.insertStarsInMovies(cast);
     }
 
     private void parseDocument() {

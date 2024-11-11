@@ -35,6 +35,8 @@ public class SAXActorParser extends DefaultHandler {
         parseDocument();
         printData();
         writeActorsToFile(stars, "stars");
+        UpdateDatabase db = new UpdateDatabase();
+        db.insertStars(stars);
     }
 
     private void parseDocument() {
