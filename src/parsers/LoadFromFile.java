@@ -32,13 +32,25 @@ public class LoadFromFile {
                 "    WHERE movies.id = temp.id " +
                 "       OR (movies.title = temp.title AND movies.year = temp.year AND movies.director = temp.director) " +
                 ");";
-
+        String insertRatingSQL = "INSERT INTO ratings (movieId, rating, numVotes) " +
+                "SELECT id, r_rating, 0 " +
+                "FROM ( " +
+                "    SELECT id, ROUND(RAND() * 10, 1) AS r_rating" +
+                "    FROM temp_movies " +
+                ") AS temp " +
+                "WHERE NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM ratings " +
+                "    WHERE ratings.movieId = temp.id " +
+                ");";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(loadTempTableSQL)) {
 
             statement.execute("SET GLOBAL local_infile = 1");
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
+            statement.execute(insertRatingSQL);
+
 
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
             System.out.println("Inserted " + rowsInserted + " rows into the main table.");
