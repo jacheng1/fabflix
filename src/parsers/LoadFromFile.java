@@ -49,11 +49,12 @@ public class LoadFromFile {
             statement.execute("SET GLOBAL local_infile = 1");
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
-            statement.execute(insertRatingSQL);
+
 
 
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
             System.out.println("Inserted " + rowsInserted + " rows into the main table.");
+            statement.execute(insertRatingSQL);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,6 +114,8 @@ public class LoadFromFile {
                 "    WHERE m.id = temp.movieId);";
 
 
+
+
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 
@@ -153,6 +156,19 @@ public class LoadFromFile {
                 "    FROM genres_in_movies gim " +
                 "    WHERE gim.genreId = g.id AND gim.movieId = temp.movieId);";
 
+        String cleanUpGenresInMoviesSQL = "DELETE FROM genres_in_movies " +
+                "WHERE movieId IN ( " +
+                "    SELECT id FROM movies " +
+                "    WHERE id NOT IN (SELECT movieId FROM stars_in_movies) " +
+                ");";
+        String cleanUpRatingsSQL = "DELETE FROM ratings " +
+                "WHERE movieId IN ( " +
+                "    SELECT id FROM movies " +
+                "    WHERE id NOT IN (SELECT movieId FROM stars_in_movies) " +
+                ");";
+
+        String cleanUpMoviesSQL = "DELETE FROM movies " +
+                "WHERE id NOT IN (SELECT movieId FROM stars_in_movies);";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 
@@ -163,7 +179,9 @@ public class LoadFromFile {
             System.out.println("Inserted " + gInserted + " rows into the genres table.");
             int gimInserted = statement.executeUpdate(insertGenresInMoviesSQL);
             System.out.println("Inserted " + gimInserted + " rows into the genres_in_movies table.");
-
+            statement.execute(cleanUpGenresInMoviesSQL);
+            statement.execute(cleanUpRatingsSQL);
+            statement.execute(cleanUpMoviesSQL);
             statement.execute("DROP TEMPORARY TABLE IF EXISTS temp_genres_in_movies");
 
         } catch (Exception e) {
