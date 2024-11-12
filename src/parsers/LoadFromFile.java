@@ -31,7 +31,17 @@ public class LoadFromFile {
                 "    WHERE movies.id = temp.id " +
                 "       OR (movies.title = temp.title AND movies.year = temp.year AND movies.director = temp.director) " +
                 ");";
-
+        String insertRatingSQL = "INSERT INTO ratings (movieId, rating, numVotes) " +
+                "SELECT id, r_rating, 0 " +
+                "FROM ( " +
+                "    SELECT id, ROUND(RAND() * 10, 1) AS r_rating" +
+                "    FROM temp_movies " +
+                ") AS temp " +
+                "WHERE NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM ratings " +
+                "    WHERE ratings.movieId = temp.id " +
+                ");";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(loadTempTableSQL)) {
              statement.execute("SET GLOBAL local_infile = 1");
@@ -39,7 +49,16 @@ public class LoadFromFile {
              statement.execute(loadTempTableSQL);
              int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
 
-             System.out.println("Inserted " + rowsInserted + " rows into the main table.");
+            statement.execute("SET GLOBAL local_infile = 1");
+            statement.execute(createTempTableSQL);
+            statement.execute(loadTempTableSQL);
+
+
+
+            int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
+            System.out.println("Inserted " + rowsInserted + " movies");
+            statement.execute(insertRatingSQL);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +88,7 @@ public class LoadFromFile {
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the stars table.");
+            System.out.println("Inserted " + rowsInserted + " stars.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,6 +117,7 @@ public class LoadFromFile {
                 "    FROM movies m " +
                 "    WHERE m.id = temp.movieId);";
 
+
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 
@@ -105,10 +125,71 @@ public class LoadFromFile {
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the stars_in_movies table.");
+            System.out.println("Inserted " + rowsInserted + " stars_in_movies.");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    public static void loadGenresInMovies(String filePath) {
+        String createTempTableSQL = "CREATE TEMPORARY TABLE temp_genres_in_movies (" +
+                "movieId VARCHAR(255), " +
+                "genreName VARCHAR(255));";
+        String loadTempTableSQL = "LOAD DATA LOCAL INFILE '" + filePath + "' " +
+                "INTO TABLE temp_genres_in_movies " +
+                "FIELDS TERMINATED BY '\\t' " +
+                "LINES TERMINATED BY '\\n' " +
+                "(movieId, genreName);";
+
+        String insertGenresSQL = "INSERT INTO genres (name) " +
+                "SELECT DISTINCT LOWER(temp.genreName) " +
+                "FROM temp_genres_in_movies temp " +
+                "WHERE NOT EXISTS (" +
+                "SELECT 1 FROM genres g WHERE LOWER(g.name) = LOWER(temp.genreName));";
+
+        String insertGenresInMoviesSQL = "INSERT INTO genres_in_movies (genreId, movieId) " +
+                "SELECT DISTINCT g.id, temp.movieId " +
+                "FROM temp_genres_in_movies temp " +
+                "JOIN genres g ON LOWER(temp.genreName) = LOWER(g.name) " +
+                "JOIN movies m ON temp.movieId = m.id " +
+                "WHERE NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM genres_in_movies gim " +
+                "    WHERE gim.genreId = g.id AND gim.movieId = temp.movieId);";
+
+        String cleanUpGenresInMoviesSQL = "DELETE FROM genres_in_movies " +
+                "WHERE movieId IN ( " +
+                "    SELECT id FROM movies " +
+                "    WHERE id NOT IN (SELECT movieId FROM stars_in_movies) " +
+                ");";
+        String cleanUpRatingsSQL = "DELETE FROM ratings " +
+                "WHERE movieId IN ( " +
+                "    SELECT id FROM movies " +
+                "    WHERE id NOT IN (SELECT movieId FROM stars_in_movies) " +
+                ");";
+
+        String cleanUpMoviesSQL = "DELETE FROM movies " +
+                "WHERE id NOT IN (SELECT movieId FROM stars_in_movies);";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
+
+            statement.execute("SET GLOBAL local_infile = 1");
+            statement.execute(createTempTableSQL);
+            statement.execute(loadTempTableSQL);
+            int gInserted = statement.executeUpdate(insertGenresSQL);
+            System.out.println("Inserted " + gInserted + " genres");
+            int gimInserted = statement.executeUpdate(insertGenresInMoviesSQL);
+            System.out.println("Inserted " + gimInserted + " genres_in_movies ");
+            statement.execute(cleanUpGenresInMoviesSQL);
+            statement.execute(cleanUpRatingsSQL);
+            statement.execute(cleanUpMoviesSQL);
+            statement.execute("DROP TEMPORARY TABLE IF EXISTS temp_genres_in_movies");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

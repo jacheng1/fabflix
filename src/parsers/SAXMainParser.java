@@ -38,12 +38,12 @@ public class SAXMainParser extends DefaultHandler {
         // printData();
         writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
-        // db.insertMovies(movies);
+
         System.out.println("Inserted " + movies.size() + " movies");
         writeGenreFile();
         // db.insertGenres(movies);
         writeGenreInMoviesToFile();
-        // db.printInconsistencies();
+
     }
 
     private void parseDocument() {
@@ -82,7 +82,9 @@ public class SAXMainParser extends DefaultHandler {
     public static void writeMoviesToFile(List<Movie> movies, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Movie movie : movies) {
-                writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
+                if (!movie.getGenre().isEmpty()) {
+                    writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
+                }
             }
             System.out.println("Movies written to " + fileName);
 
