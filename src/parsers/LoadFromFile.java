@@ -126,22 +126,20 @@ public class LoadFromFile {
                 "(movieId, genreName);";
 
         String insertGenresSQL = "INSERT INTO genres (name) " +
-                "SELECT temp.genreName " +
+                "SELECT DISTINCT LOWER(temp.genreName) " +
                 "FROM temp_genres_in_movies temp " +
                 "WHERE NOT EXISTS (" +
-                "SELECT 1 FROM genres g WHERE " +
-                "LOWER(g.name) = LOWER(temp.genreName));";
+                "SELECT 1 FROM genres g WHERE LOWER(g.name) = LOWER(temp.genreName));";
 
         String insertGenresInMoviesSQL = "INSERT INTO genres_in_movies (genreId, movieId) " +
-                "SELECT g.id, temp.movieId " +
+                "SELECT DISTINCT g.id, temp.movieId " +
                 "FROM temp_genres_in_movies temp " +
-                "JOIN genres g ON temp.genreName = g.name " +
+                "JOIN genres g ON LOWER(temp.genreName) = LOWER(g.name) " +
                 "JOIN movies m ON temp.movieId = m.id " +
                 "WHERE NOT EXISTS ( " +
                 "    SELECT 1 " +
                 "    FROM genres_in_movies gim " +
                 "    WHERE gim.genreId = g.id AND gim.movieId = temp.movieId);";
-
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
@@ -152,13 +150,12 @@ public class LoadFromFile {
             int gInserted = statement.executeUpdate(insertGenresSQL);
             System.out.println("Inserted " + gInserted + " rows into the genres table.");
             int gimInserted = statement.executeUpdate(insertGenresInMoviesSQL);
-
             System.out.println("Inserted " + gimInserted + " rows into the genres_in_movies table.");
+
+            statement.execute("DROP TEMPORARY TABLE IF EXISTS temp_genres_in_movies");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 }
