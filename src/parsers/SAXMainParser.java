@@ -2,25 +2,14 @@ package parsers;
 
 import java.io.*;
 import java.security.InvalidParameterException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.*;
 
 import java.io.IOException;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
