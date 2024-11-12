@@ -53,7 +53,7 @@ public class LoadFromFile {
 
 
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the main table.");
+            System.out.println("Inserted " + rowsInserted + " movies");
             statement.execute(insertRatingSQL);
 
         } catch (Exception e) {
@@ -84,7 +84,7 @@ public class LoadFromFile {
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the stars table.");
+            System.out.println("Inserted " + rowsInserted + " stars.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,7 +123,7 @@ public class LoadFromFile {
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
             int rowsInserted = statement.executeUpdate(insertIntoMainTableSQL);
-            System.out.println("Inserted " + rowsInserted + " rows into the stars_in_movies table.");
+            System.out.println("Inserted " + rowsInserted + " stars_in_movies.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,9 +176,9 @@ public class LoadFromFile {
             statement.execute(createTempTableSQL);
             statement.execute(loadTempTableSQL);
             int gInserted = statement.executeUpdate(insertGenresSQL);
-            System.out.println("Inserted " + gInserted + " rows into the genres table.");
+            System.out.println("Inserted " + gInserted + " genres");
             int gimInserted = statement.executeUpdate(insertGenresInMoviesSQL);
-            System.out.println("Inserted " + gimInserted + " rows into the genres_in_movies table.");
+            System.out.println("Inserted " + gimInserted + " genres_in_movies ");
             statement.execute(cleanUpGenresInMoviesSQL);
             statement.execute(cleanUpRatingsSQL);
             statement.execute(cleanUpMoviesSQL);

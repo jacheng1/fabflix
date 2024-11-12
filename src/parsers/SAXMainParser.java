@@ -48,7 +48,7 @@ public class SAXMainParser extends DefaultHandler {
         writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
         //db.insertMovies(movies);
-        System.out.println("Inserted " + movies.size() + " movies");
+        //System.out.println("Inserted " + movies.size() + " movies");
         //db.insertGenres(movies);
        // db.printInconsistencies();
     }
