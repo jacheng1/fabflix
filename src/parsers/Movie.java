@@ -62,6 +62,10 @@ public class Movie{
         return genre;
     }
 
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+    }
+
     public List<Genre> getGenreList() {
         return this.genres;
     }

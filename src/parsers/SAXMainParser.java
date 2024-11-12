@@ -29,6 +29,8 @@ public class SAXMainParser extends DefaultHandler {
 
     public SAXMainParser() {
         movies = new ArrayList<Movie>();
+        genreIdMap = new HashMap<>();
+        genreId = 0;
     }
 
     public void runExample() throws IOException, FileNotFoundException, UnsupportedEncodingException {
@@ -69,7 +71,6 @@ public class SAXMainParser extends DefaultHandler {
      * the contents
      */
     private void printData() {
-
         System.out.println("No of Employees '" + movies.size() + "'.");
 
         Iterator<Movie> it = movies.iterator();
@@ -183,52 +184,29 @@ public class SAXMainParser extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
             if (qName.equalsIgnoreCase("film")) {
-                //add it to the list
                 validMovie = true;
-
                 movies.add(tempMov);
-
             } else if (qName.equalsIgnoreCase("t") && validMovie) {
-                if (tempVal.isEmpty()) {
-                    validMovie = false;
-                    throw new InvalidParameterException("Missing title");
-                }
-
                 tempMov.setTitle(tempVal);
             } else if (qName.equalsIgnoreCase("fid") && validMovie) {
-                if (tempVal.isEmpty()) {
-                    validMovie = false;
-
-                    throw new InvalidParameterException("Missing title");
-                }
-
                 tempMov.setId(tempVal);
             } else if (qName.equalsIgnoreCase("year") && validMovie) {
-
-                if (tempVal.isEmpty()) {
-                    validMovie = false;
-
-                    throw new InvalidParameterException("Missing title");
-                }
-
                 tempMov.setYear(Integer.parseInt(tempVal));
             } else if (qName.equalsIgnoreCase("cat") && validMovie) {
-                tempMov.setGenre(tempVal);
-            } else if (qName.equalsIgnoreCase("dirn") && validMovie) {
-                if (tempVal.isEmpty()) {
-                    validMovie = false;
-                    throw new InvalidParameterException("Missing title");
+                Genre genre = new Genre();
+                genre.setName(tempVal);
+                if (!genreIdMap.containsKey(tempVal.toLowerCase())) {
+                    genre.setInconsistent(true); // Mark as inconsistent
                 }
-
+                tempMov.addGenre(genre);
+            } else if (qName.equalsIgnoreCase("dirn") && validMovie) {
                 tempMov.setDirector(tempVal);
-            }
-            else if (qName.equalsIgnoreCase("/film") && !validMovie && isUnique(tempMov, movies)) {
+            } else if (qName.equalsIgnoreCase("/film") && !validMovie && isUnique(tempMov, movies)) {
                 movies.remove(tempMov);
             }
-        }   catch (Exception e) {
-            //
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     public  boolean isUnique(Movie m, List<Movie> movies) {
