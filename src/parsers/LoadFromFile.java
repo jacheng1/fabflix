@@ -47,6 +47,7 @@ public class LoadFromFile {
             e.printStackTrace();
         }
     }
+
     public static void loadStarsdata(String filePath) {
         String createTempTableSQL = "CREATE TEMPORARY TABLE temp_stars (name VARCHAR(255), birthYear INT);";
         String loadTempTableSQL = "LOAD DATA LOCAL INFILE '" + filePath + "' " +
@@ -113,5 +114,51 @@ public class LoadFromFile {
             e.printStackTrace();
         }
     }
+
+    public static void loadGenresInMovies(String filePath) {
+        String createTempTableSQL = "CREATE TEMPORARY TABLE temp_genres_in_movies (" +
+                "movieId VARCHAR(255), " +
+                "genreName VARCHAR(255));";
+        String loadTempTableSQL = "LOAD DATA LOCAL INFILE '" + filePath + "' " +
+                "INTO TABLE temp_genres_in_movies " +
+                "FIELDS TERMINATED BY '\\t' " +
+                "LINES TERMINATED BY '\\n' " +
+                "(movieId, genreName);";
+
+        String insertGenresSQL = "INSERT INTO genres (name) " +
+                "SELECT temp.genreName " +
+                "FROM temp_genres_in_movies temp " +
+                "WHERE NOT EXISTS (" +
+                "SELECT 1 FROM genres g WHERE " +
+                "LOWER(g.name) = LOWER(temp.genreName));";
+
+        String insertGenresInMoviesSQL = "INSERT INTO genres_in_movies (genreId, movieId) " +
+                "SELECT g.id, temp.movieId " +
+                "FROM temp_genres_in_movies temp " +
+                "JOIN genres g ON temp.genreName = g.name " +
+                "JOIN movies m ON temp.movieId = m.id " +
+                "WHERE NOT EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM genres_in_movies gim " +
+                "    WHERE gim.genreId = g.id AND gim.movieId = temp.movieId);";
+
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
+
+            statement.execute("SET GLOBAL local_infile = 1");
+            statement.execute(createTempTableSQL);
+            statement.execute(loadTempTableSQL);
+            int gInserted = statement.executeUpdate(insertGenresSQL);
+            System.out.println("Inserted " + gInserted + " rows into the genres table.");
+            int gimInserted = statement.executeUpdate(insertGenresInMoviesSQL);
+
+            System.out.println("Inserted " + gimInserted + " rows into the genres_in_movies table.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
