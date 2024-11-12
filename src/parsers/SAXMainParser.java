@@ -28,27 +28,30 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SAXMainParser extends DefaultHandler {
     List<Movie> movies;
+    private HashMap<String,Integer> genreIdMap;
 
     private String tempVal;
     private boolean validMovie;
     // to maintain context
     private Movie tempMov;
-    private int inconsistencies;
     int duplicateMovies = 0;
     private String tempDir;
+    private Integer genreId;
 
     public SAXMainParser() {
         movies = new ArrayList<Movie>();
     }
 
-    public void runExample() {
+    public void runExample() throws IOException, FileNotFoundException, UnsupportedEncodingException {
         parseDocument();
         // printData();
         writeMoviesToFile(movies, "src/parsers/movies.txt");
         UpdateDatabase db = new UpdateDatabase();
         // db.insertMovies(movies);
         System.out.println("Inserted " + movies.size() + " movies");
+        writeGenreFile();
         // db.insertGenres(movies);
+        writeGenreInMoviesToFile();
         // db.printInconsistencies();
     }
 
@@ -108,7 +111,66 @@ public class SAXMainParser extends DefaultHandler {
         }
     }
 
+    private void writeGenreFile() throws IOException {
+        PrintWriter writer = new PrintWriter("genres.txt", "UTF-8");
+        Set<Genre> hash_Set = new HashSet<Genre>();
+        PrintWriter badFile = new PrintWriter("genresInconsistencies.md", "UTF-8");
 
+        Iterator<Movie> movieIterator = movies.iterator();
+        while (movieIterator.hasNext()) {
+            Movie m = movieIterator.next();
+
+            Iterator<Genre> currentGenre = m.getGenreList().iterator();
+            while (currentGenre.hasNext()){
+                Genre genre = currentGenre.next();
+                if (!genre.getInconsistent()) {
+                    hash_Set.add(genre);
+                }
+                else {
+                    badFile.printf("- Genre Name: %s\n", genre.getName());
+                }
+            }
+        }
+
+        Iterator<Genre> i = hash_Set.iterator();
+        while (i.hasNext()) {
+            Genre g = i.next();
+            if (!genreIdMap.containsKey(g.getName())){
+                ++genreId;
+                g.setId(genreId);
+                genreIdMap.put(g.getName(), g.getId());
+
+                writer.printf("%s,%s\n", g.getId(), g.getName());
+            }
+        }
+
+        writer.close();
+        badFile.close();
+    }
+
+    private void writeGenreInMoviesToFile() throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter("genres_in_movies2.txt", "UTF-8");
+        PrintWriter inconsistencyFile = new PrintWriter("genreInMoviesInconsistencies.md", "UTF-8");
+
+        Iterator<Movie> iterator = movies.iterator();
+        while (iterator.hasNext()){
+            Movie currentMovie = iterator.next();
+
+            Iterator<Genre> currentGenre = currentMovie.getGenreList().iterator();
+            while (currentGenre.hasNext()) {
+                Genre g = currentGenre.next();
+                if (g.getId() != null)
+                    writer.printf("%d, %s\n", g.getId(), currentMovie.getId());
+
+                else {
+                    inconsistencyFile.printf("- Genre %s not found", g.getName());
+                }
+            }
+        }
+
+        writer.close();
+        inconsistencyFile.close();
+    }
 
     // Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -195,7 +257,7 @@ public class SAXMainParser extends DefaultHandler {
         return duplicateMovies;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SAXMainParser spe = new SAXMainParser();
         spe.runExample();
     }

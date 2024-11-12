@@ -1,7 +1,11 @@
 package parsers;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 public class AddFromXML {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, FileNotFoundException, UnsupportedEncodingException {
         SAXActorParser spe = new SAXActorParser();
         spe.runExample();
         SAXCastParser sce = new SAXCastParser();

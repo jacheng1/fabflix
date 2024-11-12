@@ -1,6 +1,7 @@
 package parsers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Movie{
     private String title;
@@ -8,9 +9,11 @@ public class Movie{
     private String id;
     private String director;
     private ArrayList<String> genre;
+    List<Genre> genres;
 
     public Movie(){
         genre = new ArrayList<>();
+        genres = new ArrayList<>();
     }
 
     public Movie(String title, int year, String id, String director, ArrayList<String> genre) {
@@ -42,6 +45,7 @@ public class Movie{
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -49,6 +53,7 @@ public class Movie{
     public String getDirector() {
         return director;
     }
+
     public void setDirector(String director) {
         this.director = director;
     }
@@ -56,6 +61,11 @@ public class Movie{
     public ArrayList<String> getGenre() {
         return genre;
     }
+
+    public List<Genre> getGenreList() {
+        return this.genres;
+    }
+
     public void setGenre(String genre) {
         try {
             this.genre.add(genre);
