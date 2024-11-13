@@ -9,7 +9,7 @@
 
 [Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
 [Project 2 Video Link](https://youtu.be/31G4-Dydruw)\
-[Project 3 Video Link]()
+[Project 3 Video Link](https://www.youtube.com/watch?v=E2viHgW8m_0&ab_channel=KristenBae)
 
 
 
@@ -24,8 +24,8 @@
 ● Kristen: Shopping Cart Page functionality, Add-to-Cart feature on Movie List/Single Movie Page, Confirmation Page functionality, video demonstration
 
 #### Project 3:
-● Jacky: reCAPTCHA, PreparedStatement, enable encrypted password verification, Metadata Page, Add Star Page, Add Movie Page, add_movie stored procedure\
-● Kristen: Add HTTPS, moviedb password encryption
+● Jacky: reCAPTCHA, PreparedStatement, add customers/employees encrypted password verification, Metadata Page, Add Star/Movie Page, add_movie stored procedure\
+● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
 
 
 
@@ -34,6 +34,21 @@ Substring matching is used in conjunction with the LIKE SQL predicate in MovieLi
 fetch records from moviedb with m.title, m.director, and s.name that have the retrieved parameters\
 title, director, and name at any position, respectively. Next, these query excerpts are appended to\
 the StringBuilder object, queryBuilder, which contains an incomplete SQL query.
+
+
+
+### PreparedStatements
+The following .java files contain PreparedStatements: ConfirmationServlet, DashboardLoginServlet, LoginServlet, MainServlet, MovieListServlet, PaymentServlet, ShoppingCartServlet, SingleMovieServlet, & SingleStarServlet
+
+
+
+### Performance Tuning
+To maximize the efficiency of our SAX XML parser, we integrated the following:
+
+1. Writing parsed movie attributes into .txt files during parsing, which contain stars, stars_in_movies, movies, genres, and genres_into_movies. The .txt files are efficiently loaded into temporary SQL tables.
+2. Temporary tables to store parsed data from .txt files, which are then inserted into moviedb tables. Next, the temporary tables are dropped to eliminate residual data and possible duplicate insertions.\
+
+We found that these techniques vastly decreased the runtime of our SAX XML parser, as well as the time it took to load the .txt file data into our moviedb database.
 
 
 
