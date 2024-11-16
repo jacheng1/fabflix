@@ -35,14 +35,11 @@ function handleMainResult(resultData) {
     for (let i = 0; i < resultData.length; i++) {
         genreHTML += `
             <div class="genre-column col-md-3 text-center">
-        
                     <p>
                         <a href="index.html?genre=${resultData[i]['genre_ids']}" class="custom-link">
                             ${resultData[i]["movie_genre"]}
                         </a>
-                    </p>
-        
-                
+                    </p>  
             </div>`;
 
         // check to end the current row and start a new one every 4 columns
@@ -71,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     // add links to numerical titles
-
     const numericCharacters = [...'0123456789', '*']; // define the numeric characters 0-9 and the special character *
     const numericLinksContainer = document.getElementById('numeric-links');
 
@@ -90,8 +86,8 @@ let genreId = getParameterByName("genre") || "";
 
 // makes HTTP GET request; upon success, uses callback function handleMainResult()
 jQuery.ajax({
-    dataType: "json", // set return data type
-    method: "GET", // set request method
-    url: "api/main?genre=" + genreId, // set request URL as mapped by MovieListServlet
-    success: (resultData) => handleMainResult(resultData) // set callback function to handle returned data from MovieListServlet
+    dataType: "json",
+    method: "GET",
+    url: "api/main?genre=" + genreId,
+    success: (resultData) => handleMainResult(resultData)
 });
