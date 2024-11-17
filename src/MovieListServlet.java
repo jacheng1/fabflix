@@ -45,6 +45,8 @@ public class MovieListServlet extends HttpServlet {
         String director = request.getParameter("director");
         String starName = request.getParameter("star");
 
+        String fullText = request.getParameter("full-text");
+
         String moviesPerPage = request.getParameter("n");
         String sortBy = request.getParameter("sort");
         int moviesPerPageParsed = (moviesPerPage != null) ? Integer.parseInt(moviesPerPage) : 10;
@@ -107,6 +109,19 @@ public class MovieListServlet extends HttpServlet {
             if (starName != null && !starName.isEmpty()) {
                 conditions.add("s.name LIKE ?");
                 params.add("%" + starName + "%");
+            }
+
+            if (fullText != null && !fullText.isEmpty()) {
+                String[] tokens = fullText.split("\\s+");
+                StringBuilder searchQuery = new StringBuilder();
+                for (String token : tokens) {
+                    if (!token.isEmpty()) {
+                        searchQuery.append(token).append("* ");
+                    }
+                }
+
+                conditions.add("MATCH (m.title) AGAINST (? IN BOOLEAN MODE)");
+                params.add(searchQuery.toString().trim());
             }
 
             if (!conditions.isEmpty()) {

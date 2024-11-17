@@ -126,6 +126,7 @@ function buildAjaxURL(moviesPerPage) {
     let year = getParameterByName("year") || "";
     let director = getParameterByName("director") || "";
     let starName = getParameterByName("star") || "";
+    let fullText = getParameterByName("full-text") || "";
     let sortBy = getParameterByName("sort") || "";
     let page = getParameterByName("page") || "1";
 
@@ -149,6 +150,9 @@ function buildAjaxURL(moviesPerPage) {
     }
     if (starName) {
         ajaxURL += `star=${encodeURIComponent(starName)}&`;
+    }
+    if (fullText) {
+        ajaxURL += `full-text=${encodeURIComponent(fullText)}&`;
     }
     ajaxURL += `n=${encodeURIComponent(moviesPerPage)}&sort=${encodeURIComponent(sortBy)}&page=${encodeURIComponent(page)}`;
 
@@ -174,6 +178,7 @@ function savePageState() {
         year: getParameterByName("year") || "",
         director: getParameterByName("director") || "",
         starName: getParameterByName("star") || "",
+        fullText: getParameterByName("full-text") || "",
         n: getParameterByName("n") || "10",
         sort: getParameterByName("sort") || "",
         page: getParameterByName("page") || "1"
@@ -300,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function handleAddToCart (button) {
+function handleAddToCart(button) {
 
     console.log("add movie to cart");
     /**
