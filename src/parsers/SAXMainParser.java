@@ -80,7 +80,7 @@ public class SAXMainParser extends DefaultHandler {
      */
     private void printData() {
 
-        System.out.println("No of Employees '" + movies.size() + "'.");
+        System.out.println("No of Movies '" + movies.size() + "'.");
 
         Iterator<Movie> it = movies.iterator();
         while (it.hasNext()) {
@@ -91,17 +91,23 @@ public class SAXMainParser extends DefaultHandler {
     public static void writeMoviesToFile(List<Movie> movies, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Movie movie : movies) {
-                if (!movie.getGenre().isEmpty()) {
-                    writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
+               // if (!movie.getGenre().isEmpty()) {
+                if (movie.getTitle() == "Monster's Ball") {
+                    System.out.println("found monsters ball");
                 }
+                    writer.write(movie.getId() + "\t" + movie.getTitle() + "\t" + movie.getYear() + "\t" + movie.getDirector() + "\n");
+                //}
             }
             System.out.println("Movies written to " + fileName);
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
-        }try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/parsers/genres-in-movies.txt"))) {
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/parsers/genres-in-movies.txt"))) {
             for (Movie movie : movies) {
                 for (String genre : movie.getGenre()) {
-                    writer.write(movie.getId() + "\t" + genre + "\n");
+                    if (!genre.isEmpty()) {
+                        writer.write(movie.getId() + "\t" + genre + "\n");
+                    }
                 }
             }
             System.out.println("Movies written to " + "src/parsers/genres-in-movies.txt");
@@ -115,15 +121,12 @@ public class SAXMainParser extends DefaultHandler {
     //Event Handlers
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         //reset
-        tempVal = "";
 
-        if (qName.equalsIgnoreCase("dirname")) {
-            tempDir = attributes.getValue("dirname");
-        }
         if (qName.equalsIgnoreCase("film")) {
             //create a new instance of employee
             tempMov = new Movie();
-            tempMov.setDirector(tempDir);
+            validMovie = true;
+            //tempMov.setDirector(tempDir);
 
         }
     }
@@ -134,51 +137,60 @@ public class SAXMainParser extends DefaultHandler {
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
-            if (qName.equalsIgnoreCase("film")) {
-                //add it to the list
-                validMovie = true;
-                movies.add(tempMov);
-
-            } else if (qName.equalsIgnoreCase("t") && validMovie) {
-                if (tempVal.isEmpty()) {
-                    validMovie = false;
-                    throw new InvalidParameterException("Missing title");
-                }
-                tempMov.setTitle(tempVal);
-            } else if (qName.equalsIgnoreCase("fid") && validMovie) {
-                if (tempVal.isEmpty()) {
+            if (qName.equalsIgnoreCase("fid") && validMovie) {
+                if (tempVal.isEmpty() || tempVal == null) {
                     validMovie = false;
                     throw new InvalidParameterException("Missing title");
                 }
                 tempMov.setId(tempVal);
+            } else if (qName.equalsIgnoreCase("t") && validMovie) {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing title"+ tempMov.getId());
+                }
+                tempMov.setTitle(tempVal);
             } else if (qName.equalsIgnoreCase("year") && validMovie) {
 
                 if (tempVal.isEmpty()) {
                     validMovie = false;
-                    throw new InvalidParameterException("Missing title");
+                    throw new InvalidParameterException("Missing year"+ tempMov.getId());
                 }
                 tempMov.setYear(Integer.parseInt(tempVal));
 
             } else if (qName.equalsIgnoreCase("cat") && validMovie) {
+                if (tempVal.isEmpty()) {
+                    validMovie = false;
+                    throw new InvalidParameterException("Missing Genre"+ tempMov.getId());
+                }
                 tempMov.setGenre(tempVal);
             } else if (qName.equalsIgnoreCase("dirn") && validMovie) {
                 if (tempVal.isEmpty()) {
                     validMovie = false;
-                    throw new InvalidParameterException("Missing title");
+                    throw new InvalidParameterException("Missing director" + tempMov.getId());
                 }
                 tempMov.setDirector(tempVal);
             }
-            else if (qName.equalsIgnoreCase("/film") && !validMovie && isUnique(tempMov, movies)) {
-                movies.remove(tempMov);
+            else if (qName.equalsIgnoreCase("film")) {
+                if (validMovie) System.out.println(tempMov.getId() + " is a valid movie");
+                if (!validMovie) {
+                    System.out.println("this is not a valid movie " + tempMov.getId());
+                } else if (!isUnique(tempMov, movies)) {
+                    System.out.println("not adding this move: " + tempMov.getId());
+                }   else if (!tempMov.getGenre().isEmpty() && !tempMov.getId().isEmpty() && !tempMov.getTitle().isEmpty() && !tempMov.getDirector().isEmpty() && tempMov.getYear() != 0) {
+                    movies.add(tempMov);
+                }
             }
-        }   catch (Exception e) {
+        }   catch (InvalidParameterException e) {
+            System.out.println(e);
+        }   catch(Exception e) {
             //
         }
 
     }
     public  boolean isUnique(Movie m, List<Movie> movies) {
         for (Movie m1 : movies) {
-            if (m1.getId().equals(m.getId())) {
+            if (m1.getId().equals(m.getId()) || (m1.getTitle().equals(m.getTitle()) && m1.getDirector().equals(m.getDirector()) && m1.getYear()==(m.getYear()))) {
+                System.out.println(m1.getId() + " is a duplicate");
                 duplicateMovies++;
                 return false;
             }

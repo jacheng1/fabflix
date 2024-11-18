@@ -115,12 +115,15 @@ public class MovieListServlet extends HttpServlet {
                 String[] tokens = fullText.split("\\s+");
                 StringBuilder searchQuery = new StringBuilder();
                 for (String token : tokens) {
+                    System.out.println(token);
                     if (!token.isEmpty()) {
-                        searchQuery.append(token).append("* ");
+                        searchQuery.append("+").append(token).append("* ");
                     }
                 }
 
                 conditions.add("MATCH (m.title) AGAINST (? IN BOOLEAN MODE)");
+                System.out.println(searchQuery.toString());
+                System.out.println(conditions.toString());
                 params.add(searchQuery.toString().trim());
             }
 
@@ -168,10 +171,11 @@ public class MovieListServlet extends HttpServlet {
             }
 
             queryBuilder.append(";");
-
+            System.out.println(queryBuilder.toString());
             PreparedStatement statement = conn.prepareStatement(queryBuilder.toString());
             for (int i = 0; i < params.size(); i++) {
                 statement.setString(i + 1, params.get(i));
+
             }
 
             if (moviesPerPage != null && !moviesPerPage.isEmpty()) {
@@ -189,6 +193,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("movie_year", rs.getString("year"));
                 jsonObject.addProperty("movie_director", rs.getString("director"));
                 jsonObject.addProperty("movie_genre", rs.getString("genres"));
+
                 jsonObject.addProperty("movie_star", rs.getString("stars"));
                 jsonObject.addProperty("movie_rating", rs.getString("rating"));
                 jsonObject.addProperty("star_ids", rs.getString("star_ids"));
