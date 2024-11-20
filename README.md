@@ -9,7 +9,8 @@
 
 [Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
 [Project 2 Video Link](https://youtu.be/31G4-Dydruw)\
-[Project 3 Video Link](https://www.youtube.com/watch?v=E2viHgW8m_0&ab_channel=KristenBae)
+[Project 3 Video Link](https://www.youtube.com/watch?v=E2viHgW8m_0&ab_channel=KristenBae)\
+[Project 4 Video Link]()
 
 
 
@@ -26,6 +27,10 @@
 #### Project 3:
 ● Jacky: reCAPTCHA, PreparedStatement, add customers/employees encrypted password verification, Metadata Page, Add Star/Movie Page, add_movie stored procedure\
 ● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
+
+#### Project 4:
+● Jacky: full-text search,\
+● Kristen: full-text search,
 
 
 
@@ -46,7 +51,7 @@ The following .java files contain PreparedStatements: ConfirmationServlet, Dashb
 To maximize the efficiency of our SAX XML parser, we integrated the following:
 
 1. Writing parsed movie attributes into .txt files during parsing, which contain stars, stars_in_movies, movies, genres, and genres_into_movies. The .txt files are efficiently loaded into temporary SQL tables.
-2. Temporary tables to store parsed data from .txt files, which are then inserted into moviedb tables. Next, the temporary tables are dropped to eliminate residual data and possible duplicate insertions.\
+2. Temporary tables to store parsed data from .txt files, which are then inserted into moviedb tables. Next, the temporary tables are dropped to eliminate residual data and possible duplicate insertions.
 
 We found that these techniques vastly decreased the runtime of our SAX XML parser, as well as the time it took to load the .txt file data into our moviedb database.
 
