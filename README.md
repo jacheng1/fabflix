@@ -25,7 +25,7 @@
 ● Kristen: Shopping Cart Page functionality, Add-to-Cart feature on Movie List/Single Movie Page, Confirmation Page functionality, video demonstration
 
 #### Project 3:
-● Jacky: reCAPTCHA, PreparedStatement, add customers/employees encrypted password verification, Metadata Page, Add Star/Movie Page, add_movie stored procedure\
+● Jacky: reCAPTCHA, PreparedStatement, add customers/employees encrypted password verification, Metadata Page, Add Star/Movie Page, add_movie stored procedure, domain registration\
 ● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
 
 #### Project 4:
@@ -53,7 +53,9 @@ The following .java files contain a PreparedStatement:
 ● PaymentServlet\
 ● ShoppingCartServlet\
 ● SingleMovieServlet\
-● SingleStarServlet
+● SingleStarServlet\
+● LoadFromFile\
+● UpdateDatabase
 
 
 
