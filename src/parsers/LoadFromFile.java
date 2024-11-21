@@ -169,6 +169,8 @@ public class LoadFromFile {
 
         String cleanUpMoviesSQL = "DELETE FROM movies " +
                 "WHERE id NOT IN (SELECT movieId FROM stars_in_movies);";
+
+
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 

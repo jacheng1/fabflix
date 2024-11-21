@@ -126,6 +126,7 @@ function buildAjaxURL(moviesPerPage) {
     let year = getParameterByName("year") || "";
     let director = getParameterByName("director") || "";
     let starName = getParameterByName("star") || "";
+    let fullText = getParameterByName("full-text") || "";
     let sortBy = getParameterByName("sort") || "";
     let page = getParameterByName("page") || "1";
 
@@ -149,6 +150,9 @@ function buildAjaxURL(moviesPerPage) {
     }
     if (starName) {
         ajaxURL += `star=${encodeURIComponent(starName)}&`;
+    }
+    if (fullText) {
+        ajaxURL += `full-text=${encodeURIComponent(fullText)}&`;
     }
     ajaxURL += `n=${encodeURIComponent(moviesPerPage)}&sort=${encodeURIComponent(sortBy)}&page=${encodeURIComponent(page)}`;
 
@@ -174,6 +178,7 @@ function savePageState() {
         year: getParameterByName("year") || "",
         director: getParameterByName("director") || "",
         starName: getParameterByName("star") || "",
+        fullText: getParameterByName("full-text") || "",
         n: getParameterByName("n") || "10",
         sort: getParameterByName("sort") || "",
         page: getParameterByName("page") || "1"
@@ -300,8 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function handleAddToCart (button) {
-
+function handleAddToCart(button) {
     console.log("add movie to cart");
     /**
      * When users click the submit button, the browser will not direct
@@ -322,9 +326,86 @@ function handleAddToCart (button) {
             console.error('ERROR: ', error);
         }
     });
-    // clear input form
 }
 
 document.querySelector('#movie_table_body').addEventListener('click',(event) => {
     if (event.target.classList.contains('add-to-cart')) handleAddToCart(event.target);
+});
+
+const handleLookup = (query, doneCallback) => {
+    // Only trigger autocomplete for >=3 characters
+    if (query.length < 3) {
+        return;
+    }
+
+    console.log("Autocomplete initiated.");
+
+    const cachedData = localStorage.getItem(query);
+    if (cachedData) {
+        console.log("Using cached results.");
+
+        const parsedData = JSON.parse(cachedData);
+
+        // Ensure cached data is correctly formatted
+        const formattedSuggestions = parsedData.map((item) => ({
+            value: String(item.value || item), // Enforce string value
+            data: item.data || null
+        }));
+
+        handleLookupAjaxSuccess(formattedSuggestions, doneCallback);
+
+        return;
+    }
+
+    console.log("Sending Ajax request to server...");
+
+    jQuery.ajax({
+        method: "GET",
+        url: `api/autocomplete?full-text=${encodeURIComponent(query)}`,
+        success: (data) => {
+            localStorage.setItem(query, JSON.stringify(data));
+            handleLookupAjaxSuccess(data, doneCallback);
+        },
+        error: (error) => {
+            console.error("Autocomplete error:", error);
+        },
+    });
+};
+
+const handleLookupAjaxSuccess = (data, doneCallback) => {
+    console.log("Raw autocomplete suggestion(s):", data);
+
+    const suggestions = data.map((item) => ({
+        value: String(item.value || item),
+        data: item.data || null
+    }));
+
+    console.log("Formatted autocomplete suggestion(s):", suggestions);
+
+    doneCallback({ suggestions });
+};
+
+const handleSelectSuggestion = (suggestion) => {
+    window.location.href = `single-movie.html?id=${suggestion.data.id}`;
+};
+
+const handleSearch = (event) => {
+    const query = $("#autocomplete").val();
+    if (query.trim() === "") {
+        alert("Please enter some text for searching.");
+        event.preventDefault();
+        return;
+    }
+
+    console.log("Full-text search query:", query);
+};
+
+$(document).ready(() => {
+    $("#autocomplete").autocomplete({
+        lookup: (query, doneCallback) => handleLookup(query, doneCallback),
+        onSelect: (suggestion) => handleSelectSuggestion(suggestion),
+        deferRequestBy: 300
+    });
+
+    $("#search-form").on("submit", handleSearch);
 });
