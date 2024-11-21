@@ -29,7 +29,7 @@
 ● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
 
 #### Project 4:
-● Jacky: full-text search, autocomplete\
+● Jacky: full-text search, autocomplete, JDBC connection pooling,\
 ● Kristen: full-text search,
 
 
@@ -42,8 +42,18 @@ the StringBuilder object, queryBuilder, which contains an incomplete SQL query.
 
 
 
-### PreparedStatements
-The following .java files contain PreparedStatements: ConfirmationServlet, DashboardLoginServlet, LoginServlet, MainServlet, MovieListServlet, PaymentServlet, ShoppingCartServlet, SingleMovieServlet, & SingleStarServlet
+### PreparedStatement Usage
+The following .java files contain a PreparedStatement:
+
+● ConfirmationServlet\
+● DashboardLoginServlet\
+● LoginServlet\
+● MainServlet\
+● MovieListServlet\
+● PaymentServlet\
+● ShoppingCartServlet\
+● SingleMovieServlet\
+● SingleStarServlet
 
 
 
@@ -54,6 +64,30 @@ To maximize the efficiency of our SAX XML parser, we integrated the following:
 2. Temporary tables to store parsed data from .txt files, which are then inserted into moviedb tables. Next, the temporary tables are dropped to eliminate residual data and possible duplicate insertions.
 
 We found that these techniques vastly decreased the runtime of our SAX XML parser, as well as the time it took to load the .txt file data into our moviedb database.
+
+
+
+### JDBC Connection Pooling
+JDBC Connection Pooling is used in the following Java servlets:
+
+● [src/AddMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddMovieServlet.java)\
+● [src/AddStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddStarServlet.java)\
+● [src/AutocompleteServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AutocompleteServlet.java)\
+● [src/ConfirmationServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ConfirmationServlet.java)\
+● [src/DashboardLoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/DashboardLoginServlet.java)\
+● [src/LoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/LoginServlet.java)\
+● [src/MainServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MainServlet.java)\
+● [src/MetadataServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MetadataServlet.java)\
+● [src/MovieListServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MovieListServlet.java)\
+● [src/PaymentServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/PaymentServlet.java)\
+● [src/ShoppingCartServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ShoppingCartServlet.java)\
+● [src/SingleMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleMovieServlet.java)\
+● [src/SingleStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleStarServlet.java)\
+● [WebContent/META-INF/context.xml](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/WebContent/META-INF/context.xml)
+
+JDBC Connection Pooling is utilized in these servlets by initially defining a DataSource instance by allocating a set of connections from context.xml. 
+When a connection is retrieved, an already-created connection is taken from the pool. The close() method is used after each servlet completes operations using the connection,
+which returns it to the pool for future usage. As a result, establishing and closing connections has a reduced resource cost and an improved time-efficiency.
 
 
 
