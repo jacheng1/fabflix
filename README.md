@@ -29,7 +29,7 @@
 ● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
 
 #### Project 4:
-● Jacky: full-text search,\
+● Jacky: full-text search, autocomplete\
 ● Kristen: full-text search,
 
 
