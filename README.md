@@ -68,7 +68,7 @@ We found that these techniques vastly decreased the runtime of our SAX XML parse
 
 
 ### JDBC Connection Pooling
-JDBC Connection Pooling is used in the following Java servlets:
+JDBC Connection Pooling and PreparedStatement is used in the following Java servlets:
 
 ● [src/AddMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddMovieServlet.java)\
 ● [src/AddStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddStarServlet.java)\
