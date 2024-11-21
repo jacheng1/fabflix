@@ -43,6 +43,10 @@
             background-color: #1b2a39;
         }
 
+        .custom-navbar form {
+            margin-right: 70px;
+        }
+
         input.form-control {
             border-color: #424955 !important;
             background-color: #0d1116 !important;
@@ -50,15 +54,49 @@
             width: auto;
         }
 
-        .custom-navbar .search-button {
+        .full-text-search-button {
             border: none !important;
             color: white;
             background-color: #785ef5 !important;
         }
 
-        .custom-navbar .search-button:hover {
+        .full-text-search-button:hover {
             color: white !important;
             background-color: #907EEC !important;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            z-index: 100;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .autocomplete-suggestions {
+            color: #667183;
+            background: #181b20;
+            overflow: auto;
+        }
+
+        .autocomplete-suggestions strong {
+            color: #667183;
+            font-weight: bold;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .autocomplete-selected {
+            color: #ffffff;
+            background: #424955;
         }
 
         h1 {
@@ -130,20 +168,11 @@
                 </button>
             </li>
         </ul>
-        <form class="form-inline ml-auto" method="get" action="index.html">
+        <form class="form-inline ml-auto" id="search-form" method="get" action="index.html">
             <div class="form-group mr-2">
-                <input class="form-control" id="title" name="title" type="text" placeholder="Title">
+                <input class="form-control" id="autocomplete" name="full-text" type="text" placeholder="Enter text" autocomplete="off" style="width: 500px;">
             </div>
-            <div class="form-group mr-2">
-                <input class="form-control" id="year" name="year" type="text" placeholder="Year">
-            </div>
-            <div class="form-group mr-2">
-                <input class="form-control" id="director" name="director" type="text" placeholder="Director">
-            </div>
-            <div class="form-group mr-2">
-                <input class="form-control" id="star" name="star" type="text" placeholder="Star">
-            </div>
-            <button class="btn btn-primary search-button" type="submit">Search</button>
+            <button class="btn btn-primary full-text-search-button" id="search-button" type="submit">Search</button>
         </form>
     </div>
 </nav>
@@ -168,6 +197,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
 
 <!-- Load index.js file -->
 <script src="confirmation.js"></script>

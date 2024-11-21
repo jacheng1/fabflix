@@ -88,6 +88,40 @@
       background-color: #907EEC !important;
     }
 
+    .autocomplete-group {
+      padding: 2px 5px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      z-index: 100;
+    }
+
+    .autocomplete-group strong {
+      display: block;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .autocomplete-suggestions {
+      color: #667183;
+      background: #181b20;
+      overflow: auto;
+    }
+
+    .autocomplete-suggestions strong {
+      color: #667183;
+      font-weight: bold;
+    }
+
+    .autocomplete-suggestion {
+      padding: 2px 5px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .autocomplete-selected {
+      color: #ffffff;
+      background: #424955;
+    }
+
     h2 {
       color: #ffffff;
       text-align: center;
@@ -243,11 +277,11 @@
         </button>
       </li>
     </ul>
-    <form class="form-inline ml-auto" method="get" action="index.html">
+    <form class="form-inline ml-auto" id="search-form" method="get" action="index.html">
       <div class="form-group mr-2">
-        <input class="form-control" id="full-text" name="full-text" type="text" placeholder="Enter text" style="width: 500px;">
+        <input class="form-control" id="autocomplete" name="full-text" type="text" placeholder="Enter text" autocomplete="off" style="width: 500px;">
       </div>
-      <button class="btn btn-primary full-text-search-button" type="submit">Search</button>
+      <button class="btn btn-primary full-text-search-button" id="search-button" type="submit">Search</button>
     </form>
   </div>
 </nav>

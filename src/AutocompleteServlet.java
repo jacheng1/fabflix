@@ -5,14 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import jakarta.servlet.http.HttpSession;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -32,87 +30,80 @@ public class AutocompleteServlet extends HttpServlet {
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        String title = request.getParameter("full-text");
+        if (title == null || title.isEmpty()) {
+            response.getWriter().write("[]");
+
+            return;
+        }
+
         PrintWriter out = response.getWriter();
 
-        try {
-            Connection conn = dataSource.getConnection();
-            HttpSession session = request.getSession();
+        try (Connection conn = dataSource.getConnection()) {
 
-            String title = request.getParameter("query") != null ? request.getParameter("query") : "";
+            String query = "SELECT id, title FROM movies " +
+                    "WHERE MATCH(title) AGAINST (? IN BOOLEAN MODE) LIMIT 10";
 
-            String query = "SELECT id, title FROM movies WHERE match(title) against (? IN BOOLEAN " +
-                    "MODE) OR ed(?, lower(title)) <= ? LIMIT 10";
-            PreparedStatement statement = conn.prepareStatement(query);
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
+                String filterString = buildFilterString(title);
+                statement.setString(1, filterString);
 
-            String filterString = "";
-            if (title.length() > 0) {
-                String [] filters = title.split(" ");
-                for (String word : filters) {
-                    filterString += "+" + word + "* ";
+                ResultSet rs = statement.executeQuery();
+                JsonArray jsonArray = new JsonArray();
+
+                while (rs.next()) {
+                    String movieId = rs.getString("id");
+                    String movieTitle = rs.getString("title");
+                    jsonArray.add(generateJsonObject(movieId, movieTitle));
                 }
+                rs.close();
+                statement.close();
+
+                out.write(jsonArray.toString());
+                response.setStatus(200);
             }
-            statement.setString(1, filterString);
-            statement.setString(2, title.toLowerCase());
-
-            if (title.length() < 4) {
-                statement.setInt(3, 1);
-            }
-            else if (title.length() < 6) {
-                statement.setInt(3, 2);
-            }
-            else {
-                statement.setInt(3, 3);
-            }
-
-            JsonArray jsonArray = new JsonArray();
-
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                String movie_id = rs.getString("id");
-                String movie_title = rs.getString("title");
-
-                jsonArray.add(generateJsonObject(movie_id, movie_title));
-            }
-
-            out.write(jsonArray.toString());
-
-            session.setAttribute("queryResult", jsonArray.toString());
-            response.setStatus(200);
-
-            rs.close();
-            statement.close();
-            conn.close();
-
         } catch (Exception e) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("error", e.getMessage());
+            JsonObject errorJson = new JsonObject();
+            errorJson.addProperty("error", "An unexpected error occurred.");
+            response.getWriter().write(errorJson.toString());
 
-            out.write(jsonObject.toString());
             response.setStatus(500);
-
         } finally {
             out.close();
         }
     }
 
-    /*
-     * Generate the JSON Object in this format:
-     * {
-     *   "value": "<value>",
-     *   "data": { "id": <value> }
-     * }
-     */
-    private static JsonObject generateJsonObject(String id, String title) {
+    private String buildFilterString(String title) {
+        StringBuilder filterString = new StringBuilder();
+        for (String word : title.split(" ")) {
+            filterString.append("+").append(word).append("* ");
+        }
+        return filterString.toString().trim();
+    }
+
+//    For future fuzzy search:
+//    private int determineEditDistance(String title) {
+//        if (title.length() < 4) {
+//            return 1;
+//        }
+//        if (title.length() < 6) {
+//            return 2;
+//        }
+//
+//        return 3;
+//    }
+
+    private JsonObject generateJsonObject(String id, String title) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", title);
 
-        JsonObject additionalDataJsonObject = new JsonObject();
-        additionalDataJsonObject.addProperty("id", id);
-        jsonObject.add("data", additionalDataJsonObject);
+        JsonObject additionalData = new JsonObject();
+        additionalData.addProperty("id", id);
+        jsonObject.add("data", additionalData);
 
         return jsonObject;
     }
