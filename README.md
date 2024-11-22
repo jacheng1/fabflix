@@ -5,12 +5,79 @@
 
 
 
+- # General
+    - #### Team#: 101
+
+    - #### Names: Jacky Cheng, Kristen Bae
+
+    - #### Project 4 Video Demo Link:
+
+    - #### Instruction of deployment: https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101
+
+    - #### Collaborations and Work Distribution (Project 4):
+      ● Jacky: full-text search, autocomplete, JDBC connection pooling,\
+      ● Kristen: full-text search bug fixing, MySQL Master-Slave Replication,
+
+
+- # Connection Pooling
+    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+      ● [src/AddMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddMovieServlet.java)\
+      ● [src/AddStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddStarServlet.java)\
+      ● [src/AutocompleteServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AutocompleteServlet.java)\
+      ● [src/ConfirmationServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ConfirmationServlet.java)\
+      ● [src/DashboardLoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/DashboardLoginServlet.java)\
+      ● [src/LoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/LoginServlet.java)\
+      ● [src/MainServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MainServlet.java)\
+      ● [src/MetadataServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MetadataServlet.java)\
+      ● [src/MovieListServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MovieListServlet.java)\
+      ● [src/PaymentServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/PaymentServlet.java)\
+      ● [src/ShoppingCartServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ShoppingCartServlet.java)\
+      ● [src/SingleMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleMovieServlet.java)\
+      ● [src/SingleStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleStarServlet.java)\
+      ● [WebContent/META-INF/context.xml](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/WebContent/META-INF/context.xml)
+
+    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+        JDBC Connection Pooling is utilized in these servlets by initially defining a DataSource instance by allocating a set of connections from context.xml.
+        When a connection is retrieved, an already-created connection is taken from the pool. The close() method is used after each servlet completes operations using the connection,
+        which returns it to the pool for future usage. As a result, establishing and closing connections has a reduced resource cost and an improved time-efficiency.
+
+    - #### Explain how Connection Pooling works with two backend SQL.
+
+
+- # Master/Slave
+    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+
+    - #### How read/write requests were routed to Master/Slave SQL?
+
+
+- # JMeter TS/TJ Time Logs
+    - #### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
+
+
+- # JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+
+
 ### Demonstration
 
 [Project 1 Video Link](https://www.youtube.com/watch?v=LL-pH1_uBWY&ab_channel=KristenBae)\
 [Project 2 Video Link](https://youtu.be/31G4-Dydruw)\
 [Project 3 Video Link](https://www.youtube.com/watch?v=E2viHgW8m_0&ab_channel=KristenBae)\
-[Project 4 Video Link]()
+[Project 4 Video Link]()\
+[Project 5 Video Link]()
 
 
 
@@ -30,7 +97,7 @@
 
 #### Project 4:
 ● Jacky: full-text search, autocomplete, JDBC connection pooling,\
-● Kristen: full-text search,
+● Kristen: full-text search bug fixing, MySQL Master-Slave Replication,
 
 
 
@@ -66,30 +133,6 @@ To maximize the efficiency of our SAX XML parser, we integrated the following:
 2. Temporary tables to store parsed data from .txt files, which are then inserted into moviedb tables. Next, the temporary tables are dropped to eliminate residual data and possible duplicate insertions.
 
 We found that these techniques vastly decreased the runtime of our SAX XML parser, as well as the time it took to load the .txt file data into our moviedb database.
-
-
-
-### JDBC Connection Pooling
-JDBC Connection Pooling and PreparedStatement is used in the following Java servlets:
-
-● [src/AddMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddMovieServlet.java)\
-● [src/AddStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddStarServlet.java)\
-● [src/AutocompleteServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AutocompleteServlet.java)\
-● [src/ConfirmationServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ConfirmationServlet.java)\
-● [src/DashboardLoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/DashboardLoginServlet.java)\
-● [src/LoginServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/LoginServlet.java)\
-● [src/MainServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MainServlet.java)\
-● [src/MetadataServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MetadataServlet.java)\
-● [src/MovieListServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/MovieListServlet.java)\
-● [src/PaymentServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/PaymentServlet.java)\
-● [src/ShoppingCartServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ShoppingCartServlet.java)\
-● [src/SingleMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleMovieServlet.java)\
-● [src/SingleStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/SingleStarServlet.java)\
-● [WebContent/META-INF/context.xml](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/WebContent/META-INF/context.xml)
-
-JDBC Connection Pooling is utilized in these servlets by initially defining a DataSource instance by allocating a set of connections from context.xml. 
-When a connection is retrieved, an already-created connection is taken from the pool. The close() method is used after each servlet completes operations using the connection,
-which returns it to the pool for future usage. As a result, establishing and closing connections has a reduced resource cost and an improved time-efficiency.
 
 
 
