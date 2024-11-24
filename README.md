@@ -15,8 +15,8 @@
     - #### Instruction of deployment: https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101
 
     - #### Collaborations and Work Distribution (Project 4):
-      ● Jacky: full-text search, autocomplete, JDBC connection pooling,\
-      ● Kristen: full-text search bug fixing, MySQL Master-Slave Replication,
+      ● Jacky: full-text search, autocomplete, JDBC connection pooling\
+      ● Kristen: full-text search bug fix, MySQL Master-Slave Replication, scaling with cluster of MySQL/Tomcat, load balancer, video demonstration
 
 
 - # Connection Pooling
@@ -42,13 +42,21 @@
         which returns it to the pool for future usage. As a result, establishing and closing connections has a reduced resource cost and an improved time-efficiency.
 
     - #### Explain how Connection Pooling works with two backend SQL.
-
+        A database connection can be distributed from the pool and established to either the Master or Slave moviedb databases. Establishing and freeing connections both yield a 
+        reduced resource cost and an improved time efficiency.
 
 - # Master/Slave
     - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
 
-    - #### How read/write requests were routed to Master/Slave SQL?
+      ● [src/AddMovieServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddMovieServlet.java)\
+      ● [src/AddStarServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/AddStarServlet.java)\
+      ● [src/ConfirmationServlet.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/ConfirmationServlet.java)\
+      ● [src/UpdateEmployeeSecurePassword.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/UpdateEmployeeSecurePassword.java)\
+      ● [src/UpdateUserSecurePassword.java](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/src/UpdateUserSecurePassword.java)\
+      ● [WebContent/META-INF/context.xml](https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101/blob/main/WebContent/META-INF/context.xml)
 
+    - #### How read/write requests were routed to Master/Slave SQL?
+        Any write requests were routed to Master, while read requests were routed to either the Master or Slave.
 
 - # JMeter TS/TJ Time Logs
     - #### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
@@ -96,8 +104,8 @@
 ● Kristen: Add HTTPS, moviedb customers/employees password encryption, SAX XML parser, video demonstration
 
 #### Project 4:
-● Jacky: full-text search, autocomplete, JDBC connection pooling,\
-● Kristen: full-text search bug fixing, MySQL Master-Slave Replication,
+● Jacky: full-text search, autocomplete, JDBC connection pooling\
+● Kristen: full-text search bug fix, MySQL Master-Slave Replication, scaling with cluster of MySQL/Tomcat, load balancer, video demonstration
 
 
 
