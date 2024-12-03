@@ -24,7 +24,7 @@
               password="My6$Password"
               url="jdbc:mysql://host.docker.internal:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"
     />
-    <Resource name="jdbc/moviedb_slave"
+    <Resource name="jdbc/moviedb"
               auth="Container"
               driverClassName="com.mysql.cj.jdbc.Driver"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
