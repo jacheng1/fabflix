@@ -12,7 +12,7 @@ public class UpdateUserSecurePassword {
 
         String loginUser = "mytestuser";
         String loginPasswd = "My6$Password";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        String loginUrl = "jdbc:mysql://host.docker.internal:3306/moviedb_master";
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);

@@ -23,7 +23,7 @@ public class AddStarServlet extends HttpServlet {
     // servlet initialization
     public void init(ServletConfig config) {
         try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb"); // fetch DataSource from environment, configure JDBC in application server
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb_master"); // fetch DataSource from environment, configure JDBC in application server
         } catch (NamingException e) {
             e.printStackTrace();
         }
