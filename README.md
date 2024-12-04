@@ -10,13 +10,13 @@
 
     - #### Names: Jacky Cheng, Kristen Bae
 
-    - #### Project 4 Video Demo Link: https://www.youtube.com/watch?v=5NvV-r3haU0&ab_channel=KristenBae
+    - #### Project 5 Video Demo Link: 
 
     - #### Instruction of deployment: https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101
 
-    - #### Collaborations and Work Distribution (Project 4):
-      ● Jacky: full-text search, autocomplete, JDBC connection pooling\
-      ● Kristen: full-text search bug fix, MySQL Master-Slave Replication, scaling with cluster of MySQL/Tomcat, load balancer, video demonstration
+    - #### Collaborations and Work Distribution (Project 5):
+      ● Jacky: Running on Docker container,\
+      ● Kristen: Running on Docker container,
 
 
 - # Connection Pooling
@@ -106,6 +106,10 @@
 #### Project 4:
 ● Jacky: full-text search, autocomplete, JDBC connection pooling\
 ● Kristen: full-text search bug fix, MySQL Master-Slave Replication, scaling with cluster of MySQL/Tomcat, load balancer, video demonstration
+
+#### Project 5:
+● Jacky: Running on Docker container,\
+● Kristen: Running on Docker container,
 
 
 
