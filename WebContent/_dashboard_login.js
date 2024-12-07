@@ -34,22 +34,22 @@ function submitDashboardLoginForm(formSubmitEvent) {
 
     formSubmitEvent.preventDefault();
 
-    // retrieve reCAPTCHA response token
-    let recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-        // if reCAPTCHA is not completed, show an error message
-        $("#dashboard_login_error_message").text("Please complete the reCAPTCHA.");
-
-        return;
-    }
-
-    // construct form data
-    let formData = dashboard_login_form.serialize() + "&g-recaptcha-response=" + recaptchaResponse;
+    // // retrieve reCAPTCHA response token
+    // let recaptchaResponse = grecaptcha.getResponse();
+    // if (!recaptchaResponse) {
+    //     // if reCAPTCHA is not completed, show an error message
+    //     $("#dashboard_login_error_message").text("Please complete the reCAPTCHA.");
+    //
+    //     return;
+    // }
+    //
+    // // construct form data
+    // let formData = dashboard_login_form.serialize() + "&g-recaptcha-response=" + recaptchaResponse;
 
     $.ajax(
         "api/dashboard_login", {
             method: "POST",
-            data: formData,
+            data: dashboard_login_form.serialize(),
             dataType: "text",
             success: handleDashboardLoginResult
         }

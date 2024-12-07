@@ -40,7 +40,7 @@ public class DashboardLoginServlet extends HttpServlet {
 
         JsonObject responseJsonObject = new JsonObject();
 
-        StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+        // StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
 
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT email, password FROM employees WHERE email = ?"; // define SQL query
@@ -56,7 +56,7 @@ public class DashboardLoginServlet extends HttpServlet {
                 // retrieve encrypted password from moviedb
                 String dbPassword = rs.getString("password");
 
-                if (passwordEncryptor.checkPassword(password, dbPassword)) {
+                if (dbPassword.equals(password)) {
                     // password found
 
                     // set this user on this session
