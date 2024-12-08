@@ -64,7 +64,7 @@
 | **K8s Cluster**                                                                                    | **Throughput (minute)** |
 |----------------------------------------------------------------------------------------------------|-------------------------|
 | Case 1: 1 Control Plane + 3 Worker nodes + 1 master MySQL pod + 1 slave MySQL pod + 2 Fabflix pods | 15230.19                |
-| Case 2: 1 Control Plane + 4 Worker nodes + 1 master MySQL pod + 1 slave MySQL pod + 3 Fabflix pods | 27481.18                |
+| Case 2: 1 Control Plane + 4 Worker nodes + 1 master MySQL pod + 1 slave MySQL pod + 3 Fabflix pods | 14562.488               |
 
 
 
