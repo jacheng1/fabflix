@@ -15,8 +15,8 @@
     - #### Instruction of deployment: https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101
 
     - #### Collaborations and Work Distribution (Project 5):
-      ● Jacky: Running on Docker container,\
-      ● Kristen: Running on Docker container,
+      ● Jacky: Running on Docker container, set up Kubernetes (K8s) cluster on AWS, deploy Fabflix to K8s cluster on AWS, JMeter testing\
+      ● Kristen: Running on Docker container, set up Kubernetes (K8s) cluster on AWS, video demonstration
 
 
 - # Connection Pooling
@@ -108,8 +108,8 @@
 ● Kristen: full-text search bug fix, MySQL Master-Slave Replication, scaling with cluster of MySQL/Tomcat, load balancer, video demonstration
 
 #### Project 5:
-● Jacky: Running on Docker container,\
-● Kristen: Running on Docker container,
+● Jacky: Running on Docker container, set up Kubernetes (K8s) cluster on AWS, deploy Fabflix to K8s cluster on AWS, JMeter testing\
+● Kristen: Running on Docker container, set up Kubernetes (K8s) cluster on AWS, video demonstration
 
 
 
