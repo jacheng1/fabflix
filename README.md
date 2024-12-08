@@ -10,7 +10,7 @@
 
     - #### Names: Jacky Cheng, Kristen Bae
 
-    - #### Project 5 Video Demo Link: 
+    - #### Project 5 Video Demo Link: https://youtu.be/4kcXqH405kc
 
     - #### Instruction of deployment: https://github.com/uci-jherold2-fall24-cs122b/2024-fall-cs-122b-team-101
 
@@ -74,7 +74,7 @@
 [Project 2 Video Link](https://youtu.be/31G4-Dydruw)\
 [Project 3 Video Link](https://www.youtube.com/watch?v=E2viHgW8m_0&ab_channel=KristenBae)\
 [Project 4 Video Link](https://www.youtube.com/watch?v=5NvV-r3haU0&ab_channel=KristenBae)\
-[Project 5 Video Link]()
+[Project 5 Video Link](https://youtu.be/4kcXqH405kc)
 
 
 
